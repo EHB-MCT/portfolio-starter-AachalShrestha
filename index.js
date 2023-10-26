@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
-const port = 3000
+const port = 4000
+
+require('dotenv').config();
 
 var bodyParser = require('body-parser')
 
@@ -9,7 +11,7 @@ var bodyParser = require('body-parser')
 const {
     MongoClient
 } = require("mongodb")
-const url = "mongodb+srv://aliciachickenwings:chicken123@cluster0.snv4piv.mongodb.net/?retryWrites=true&w=majority";
+const url = process.env.url;
 
 const client = new MongoClient(url);
 

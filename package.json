@@ -1,9 +1,10 @@
 {
-  "name": "les_1_api",
+  "name": "src",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -12,7 +13,17 @@
   "dependencies": {
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2"
-  }
+    "express": "^4.18.2",
+    "knex": "^3.0.1",
+    "mysql2": "^3.6.2",
+    "nodemon": "^3.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EHB-MCT/portfolio-starter-AachalShrestha.git"
+  },
+  "bugs": {
+    "url": "https://github.com/EHB-MCT/portfolio-starter-AachalShrestha/issues"
+  },
+  "homepage": "https://github.com/EHB-MCT/portfolio-starter-AachalShrestha#readme"
 }

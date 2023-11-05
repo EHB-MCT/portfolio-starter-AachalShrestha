@@ -4,8 +4,7 @@ module.exports = {
     connection: {
       host: 'localhost',
       user: 'root',
-      password: 'root',
-      database: 'dev5',
+      database: 'devv',
     },
     migrations: {
       tableName: 'knex_migrations',

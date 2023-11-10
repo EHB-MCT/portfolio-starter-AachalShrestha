@@ -8,9 +8,16 @@ const PORT = 3000;
 
 // Create a Knex.js instance
 const db = knex(knexfile.development);
+
+
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(express.json());
+
+
+app.get('', (req, res) => {
+  res.send('gogoggo')
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
@@ -18,7 +25,7 @@ app.listen(PORT, () => {
 });
 
 app.get('/songs', (req, res) => {
-  knex('songs')
+  db('songs')
     .select('*')
     .then((songs) => {
       res.json(songs);
@@ -31,12 +38,27 @@ app.get('/songs', (req, res) => {
     });
 });
 
+app.get('/', (req, res) => {
+  db('songs')
+    .select('*')
+    .then((songs) => {
+      res.json(songs);
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json({
+        error: 'Unable to fetch songs'
+      });
+    });
+});
+
+
 app.post('/artists', (req, res) => {
   const {
     name
   } = req.body;
 
-  knex('artists')
+  db('artists')
     .insert({
       name: name
     })
@@ -53,13 +75,16 @@ app.post('/artists', (req, res) => {
       });
     });
 });
+
+
 /* app.post('/songs', (req, res) => {
   const {
     name,
     artistName
   } = req.body;
 
-  return knex('songs')
+
+  return db('songs')
     .insert({
       name,
       artist_id: artistId

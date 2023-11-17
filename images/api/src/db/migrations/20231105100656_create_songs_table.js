@@ -3,17 +3,18 @@
  * @returns { Promise<void> }
  */
 exports.up = function (knex) {
-    return knex.schema.createTable("songs", (table) => {
-        table.increments("id").primary();
-        table.string("name").notNullable();
-        table
-            .integer("artist_id")
-            .unsigned()
-            .references("id")
-            .inTable("artists")
-            .onDelete("SET NULL");
-    })
-
+    return knex.schema
+        .createTable("songs", (table) => {
+            table.increments("id").primary();
+            table.uuid('uuid').defaultTo(knex.fn.uuid());
+            table.string("name").notNullable();
+            table
+                .integer("artist_id")
+                .unsigned()
+                .references("id")
+                .inTable("artists")
+                .onDelete("SET NULL");
+        });
 };
 
 /**

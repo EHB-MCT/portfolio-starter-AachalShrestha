@@ -5,9 +5,10 @@
 exports.up = function (knex) {
     return knex.schema.createTable("artists", (table) => {
         table.increments("id").primary();
+        table.uuid('uuid').defaultTo(knex.fn.uuid());
         table.string("name").notNullable();
+        table.string("age").notNullable();
     });
-
 };
 
 /**

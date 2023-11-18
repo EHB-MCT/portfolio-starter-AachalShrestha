@@ -149,7 +149,48 @@ router.post('/users/add-favorite-song', async (req, res) => {
     }
 });
 //DELETE a favourite song of a user
+router.delete('/users/delete-favorite-song', async (req, res) => {
+    const {
+        user_id,
+        favorite_song_id
+    } = req.body;
 
+    try {
+        const existingFavoriteSong = await db("users_songs").select().where({
+            user_id,
+            favorite_song_id
+        }).first();
+
+        if (existingFavoriteSong) {
+            const deletedCount = await db("users_songs")
+                .where({
+                    user_id,
+                    favorite_song_id
+                })
+                .del();
+
+            if (deletedCount > 0) {
+                res.status(200).send({
+                    message: "Song removed from favorites",
+                });
+            } else {
+                res.status(404).send({
+                    message: "Song not found in favorites",
+                });
+            }
+        } else {
+
+            res.status(409).send({
+                message: "This song is not in favorites",
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: 'Unable to add song to favorites',
+        });
+    }
+});
 //GET favourite song of a user
 
 

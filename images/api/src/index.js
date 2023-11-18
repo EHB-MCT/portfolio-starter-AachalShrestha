@@ -63,8 +63,9 @@ app.post('/artists', async (req, res) => {
     age
   } = req.body;
   const artistUUID = uuidv4();
-  const existingArtist = await db("artists").select("id").where("name", name);
-  if (existingArtist > 0) {
+  const existingArtist = await db("artists").select().where("name", name).first();
+  console.log(existingArtist)
+  if (existingArtist) {
     res.status(409).send({
       message: "This artist already exists"
     })
@@ -74,9 +75,10 @@ app.post('/artists', async (req, res) => {
         name: name,
         age: age,
         uuid: artistUUID
-      });
+      })
+      .returning();
 
-    res.status(200).send(`Artist with name: ${name} has been added to the database`);
+    res.status(200).send(`Artist added!: ${name}`);
   }
 });
 
@@ -85,42 +87,40 @@ app.post('/artists', async (req, res) => {
 
 
 
-app.post('/songs', (req, res) => {
+app.post('/songs', async (req, res) => {
   const {
     name,
     artist
   } = req.body;
 
-  return db('artists')
-    .select('id')
-    .where('name', artist)
-    .then((existingArtists) => {
-      if (existingArtists.length > 0) {
-        return db('songs')
-          .insert({
-            name: name,
-            artist_id: existingArtists.id
-          })
-          .returning('id');
-      }
+  const songUUID = uuidv4();
+  const existingSong = await db('songs').select("id").where("name", name).first();
+  const existingArtist = await db('artists').select("id").where("name", artist).first();
+  console.log(existingSong);
 
-      return res.status(409).json({
-        error: "Artist doesn't exist yet, add artist first"
-      });
-
-    })
-    .then((artist) => {
-      if (artist) {
-        res.status(201).json({
-          message: `${name} has been added with id ${artist[0]}!`,
-          data: artist
-        });
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).json({
-        error: 'Unable to add a new artist'
-      });
+  if (existingSong) {
+    res.status(409).send({
+      message: "This song already exists"
     });
-})
+  } else {
+    if (existingArtist) {
+      const resp = await db('songs')
+        .insert({
+          name: name,
+          artist_id: existingArtist.id,
+          uuid: songUUID
+        });
+      console.log(resp)
+      res.status(200).send(`Artist added!: ${resp}`);
+
+    } else {
+      res.status(409).send({
+        message: "This artist doesn't exist"
+      });
+    }
+  }
+
+
+
+
+});

@@ -9,7 +9,7 @@ exports.up = function (knex) {
             table.uuid('uuid').defaultTo(knex.fn.uuid());
             table.string("name").notNullable();
             table
-                .integer("artist_id")
+                .integer("artist_id").notNullable()
                 .unsigned()
                 .references("id")
                 .inTable("artists")

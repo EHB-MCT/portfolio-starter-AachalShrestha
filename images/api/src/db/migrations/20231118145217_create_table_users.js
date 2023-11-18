@@ -7,7 +7,9 @@ exports.up = function (knex) {
         table.increments("id").primary();
         table.uuid('uuid').defaultTo(knex.fn.uuid());
         table.string("username").notNullable();
+        table.string("email").notNullable();
         table.string("password").notNullable();
+        table.integer("favorite_song_id").unsigned().references("id").inTable("songs").onDelete("SET NULL");
     });
 };
 
@@ -16,5 +18,5 @@ exports.up = function (knex) {
  * @returns { Promise<void> }
  */
 exports.down = function (knex) {
-
+    return knex.schema.dropTable("users");
 };

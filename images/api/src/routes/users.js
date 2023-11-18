@@ -31,11 +31,36 @@ router.get('/users', async (req, res) => {
 router.post('/users/register', async (req, res) => {
     const {
         username,
+        email,
         password
     } = req.body;
 
     const userUUID = uuidv4();
 
+    const existingUser = await db("users").select().where("email", email).first();
+    if (!username || !email || !password) {
+        res.status(400).send({
+            status: "Bad request",
+            message: "Some fields are missing: username, email, password"
+        });
+    } else {
+        if (existingUser) {
+            res.status(409).send({
+                message: "User with this email already exists"
+            });
+        } else {
+            const resp = await db("users").insert({
+                    username: username,
+                    email: email,
+                    password: password
+                })
+                .returning();
+
+            res.status(200).send({
+                message: `User has been registered!: ${username, email}`
+            });
+        }
+    }
 })
 
 module.exports = router;

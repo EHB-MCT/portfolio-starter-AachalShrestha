@@ -61,6 +61,44 @@ router.post('/users/register', async (req, res) => {
             });
         }
     }
-})
+});
+
+router.post('/users/login', async (req, res) => {
+    const {
+        email,
+        password
+    } = req.body;
+
+    const userUUID = uuidv4();
+
+    if (!email || !password) {
+        res.status(400).send({
+            status: "Bad request",
+            message: "Some fields are missing: username, email, password"
+        });
+    } else {
+        const existingUser = await db("users").select().where("email", email).first();
+        if (existingUser) {
+            if (existingUser.password == password) {
+                res.status(200).send({
+                    status: "OK request",
+                    message: "logged in",
+                    data: existingUser
+                });
+            } else {
+                res.status(401).send({
+                    status: "Bad request",
+                    message: "Wrong password"
+                });
+            }
+        } else {
+            res.status(401).send({
+                status: "Bad request",
+                message: "User with this mail doen't exist"
+            });
+        }
+    }
+});
+
 
 module.exports = router;

@@ -8,6 +8,7 @@ exports.up = function (knex) {
         table.uuid('uuid').defaultTo(knex.fn.uuid());
         table.string("name").notNullable();
         table.string("age").notNullable();
+        table.timestamps(true, true);
     });
 };
 

@@ -10,6 +10,7 @@ exports.up = function (knex) {
         table.string("email").notNullable();
         table.string("password").notNullable();
         table.integer("favorite_song_id").unsigned().references("id").inTable("songs").onDelete("SET NULL");
+        table.timestamps(true, true);
     });
 };
 

@@ -8,6 +8,7 @@ exports.up = function (knex) {
         table.integer("user_id").unsigned().references("id").inTable("users").onDelete("CASCADE");
         table.integer("favorite_song_id").unsigned().references("id").inTable("songs").onDelete("CASCADE");
         table.unique(["user_id", "favorite_song_id"]);
+        table.timestamps(true, true);
     });
 };
 

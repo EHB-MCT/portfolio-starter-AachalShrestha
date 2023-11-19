@@ -7,7 +7,6 @@ exports.up = function (knex) {
         table.increments("id").primary();
         table.uuid('uuid').defaultTo(knex.fn.uuid());
         table.string("name").notNullable();
-        table.string("age").notNullable();
         table.timestamps(true, true);
     });
 };

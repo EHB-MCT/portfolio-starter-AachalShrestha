@@ -29,6 +29,29 @@ router.get('/songs', (req, res) => {
         });
 });
 
+router.get('/songs/:artist_id', async (req, res) => {
+    const artist_id = req.params.artist_id;
+
+    try {
+        const resp = await db('songs')
+            .select()
+            .where("artist_id", artist_id)
+            .then((songs) => {
+                res.status(200).send({
+                    status: "OK request",
+                    message: `Got all songs of artist with ID:${artist_id}`,
+                    data: songs
+                });
+            });
+    } catch (error) {
+        console.log(err);
+        res.status(500).send({
+            error: 'something went wrong',
+            value: err
+        });
+    }
+});
+
 router.post('/songs', async (req, res) => {
     const {
         name,

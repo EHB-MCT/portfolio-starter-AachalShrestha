@@ -18,9 +18,18 @@ router.use(bodyParser.json());
 router.use(express.json());
 router.use(bodyParser.json());
 
+
+/**
+ * Get all users.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
+
 router.get('/users', async (req, res) => {
     db('users')
-        .select('*')
+        .select('id', 'username', 'email')
         .then((users) => {
             res.json(users);
         })
@@ -30,8 +39,15 @@ router.get('/users', async (req, res) => {
                 error: 'Unable to fetch users'
             });
         });
-})
+});
 
+/**
+ * Register a new user.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
 router.post('/users/register', async (req, res) => {
     try {
         const {
@@ -74,6 +90,13 @@ router.post('/users/register', async (req, res) => {
     }
 });
 
+/**
+ * Log in a user.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
 router.post('/users/login', async (req, res) => {
     try {
         const {
@@ -119,6 +142,13 @@ router.post('/users/login', async (req, res) => {
     }
 });
 
+/**
+ * Add a song to favorites of a user.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
 router.post('/users/add-favorite-song', async (req, res) => {
     const {
         user_id,
@@ -152,7 +182,14 @@ router.post('/users/add-favorite-song', async (req, res) => {
         });
     }
 });
-//DELETE a favourite song of a user
+
+/**
+ * Delete a favorite song of a user.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
 router.delete('/users/delete-favorite-song', async (req, res) => {
     const {
         user_id,
@@ -195,8 +232,15 @@ router.delete('/users/delete-favorite-song', async (req, res) => {
         });
     }
 });
-//GET favourite song of a user
-router.get('/users/favorite_songs/:user_id', async (req, res) => {
+
+/**
+ * Get favorite songs of a user.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
+router.get('/users/:user_id/favorite-songs', async (req, res) => {
     const user_id = req.params.user_id;
     console.log(user_id);
     try {

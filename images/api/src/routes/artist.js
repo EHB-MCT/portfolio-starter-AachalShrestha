@@ -14,6 +14,13 @@ router.use(bodyParser.json());
 router.use(express.json());
 router.use(bodyParser.json());
 
+/**
+ * Get all artists.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
 router.get('/artists', (req, res) => {
     db('artists')
         .select('*')
@@ -28,6 +35,13 @@ router.get('/artists', (req, res) => {
         });
 });
 
+/**
+ * Post a new artist.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
 router.post('/artists', async (req, res) => {
     const {
         name,

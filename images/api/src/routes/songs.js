@@ -14,7 +14,13 @@ router.use(bodyParser.json());
 router.use(express.json());
 router.use(bodyParser.json());
 
-//GET
+/**
+ * Get all songs.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
 router.get('/songs', (req, res) => {
     db('songs')
         .select('*')
@@ -29,6 +35,13 @@ router.get('/songs', (req, res) => {
         });
 });
 
+/**
+ * Get all songs of a certain artist.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
 router.get('/songs/:artist_id', async (req, res) => {
     const artist_id = req.params.artist_id;
 
@@ -52,6 +65,13 @@ router.get('/songs/:artist_id', async (req, res) => {
     }
 });
 
+/**
+ * Post a new song.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
 router.post('/songs', async (req, res) => {
     const {
         name,

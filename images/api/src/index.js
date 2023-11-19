@@ -1,105 +1,26 @@
 const express = require('express');
 const knex = require('knex');
 const knexfile = require('./knexfile');
-
+const {
+  v4: uuidv4
+} = require('uuid');
 const app = express();
 const PORT = 3000;
 
-
-// Create a Knex.js instance
 const db = knex(knexfile.development);
 
-
+// Remove the following line
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
-app.use(express.json());
 
-
-app.get('', (req, res) => {
-  res.send('gogoggo')
-});
+const artistsRoutes = require('./routes/artist.js');
+const songsRoutes = require('./routes/songs.js');
+const userRoutes = require('./routes/users.js')
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-
 });
 
-app.get('/songs', (req, res) => {
-  db('songs')
-    .select('*')
-    .then((songs) => {
-      res.json(songs);
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).json({
-        error: 'Unable to fetch songs'
-      });
-    });
-});
-
-app.get('/', (req, res) => {
-  db('songs')
-    .select('*')
-    .then((songs) => {
-      res.json(songs);
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).json({
-        error: 'Unable to fetch songs'
-      });
-    });
-});
-
-
-app.post('/artists', (req, res) => {
-  const {
-    name
-  } = req.body;
-
-  db('artists')
-    .insert({
-      name: name
-    })
-    .returning('id')
-    .then((artistId) => {
-      res.status(201).json({
-        message: `${name} has been added!`
-      });
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).json({
-        error: 'Unable to add a new artist'
-      });
-    });
-});
-
-
-/* app.post('/songs', (req, res) => {
-  const {
-    name,
-    artistName
-  } = req.body;
-
-
-  return db('songs')
-    .insert({
-      name,
-      artist_id: artistId
-    })
-    .returning('id');
-  .then((songId) => {
-      res.status(201).json({
-        id: songId
-      });
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).json({
-        error: 'Unable to add a new song'
-      });
-
-    });
-}) */
+app.use('/', artistsRoutes);
+app.use('/', songsRoutes);
+app.use('/', userRoutes);

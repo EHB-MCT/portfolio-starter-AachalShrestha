@@ -1,3 +1,7 @@
+//CHATGPT said to put this:
+/* jshint esversion: 6 */
+
+
 const express = require('express');
 const knex = require('knex');
 const knexfile = require('../knexfile');
@@ -192,7 +196,41 @@ router.delete('/users/delete-favorite-song', async (req, res) => {
     }
 });
 //GET favourite song of a user
+router.get('/users/favorite_songs/:user_id', async (req, res) => {
+    const user_id = req.params.user_id;
+    console.log(user_id);
+    try {
+        const fetch_favorite_songs = await db('users_songs')
+            .select()
+            .where("user_id", user_id);
+
+        const favorite_songs = [];
+
+        await Promise.all(
+            fetch_favorite_songs.map(async (song) => {
+                const getSongs = await db('songs')
+                    .select()
+                    .where("id", song.favorite_song_id);
+                favorite_songs.push(getSongs[0]);
+            })
+        );
+
+        console.log(favorite_songs);
+
+        res.status(200).json({
+            data: favorite_songs
+        });
 
 
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: 'Unable to fetch songs'
+        });
+
+    }
+
+});
 
 module.exports = router;

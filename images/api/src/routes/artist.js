@@ -14,11 +14,21 @@ router.use(bodyParser.json());
 router.use(express.json());
 router.use(bodyParser.json());
 
+/**
+ * Get all artists.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
 router.get('/artists', (req, res) => {
     db('artists')
         .select('*')
         .then((artists) => {
-            res.json(artists);
+            res.status(200).send({
+                status: "OK request",
+                data: artists,
+            });
         })
         .catch((error) => {
             console.error(error);
@@ -28,6 +38,13 @@ router.get('/artists', (req, res) => {
         });
 });
 
+/**
+ * Post a new artist.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
 router.post('/artists', async (req, res) => {
     const {
         name,
@@ -38,7 +55,8 @@ router.post('/artists', async (req, res) => {
 
     if (existingArtist) {
         res.status(409).send({
-            message: "This artist already exists"
+            status: "OK request",
+            message: "This artist already exists",
         });
     } else {
         const resp = await db("artists")
@@ -49,7 +67,10 @@ router.post('/artists', async (req, res) => {
             })
             .returning();
 
-        res.status(200).send(`Artist added!: ${name}`);
+        res.status(200).send({
+            status: "OK request",
+            message: `Artist added!: ${name}`,
+        });
     }
 });
 

@@ -18,20 +18,39 @@ router.use(bodyParser.json());
 router.use(express.json());
 router.use(bodyParser.json());
 
+
+/**
+ * Get all users.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
+
 router.get('/users', async (req, res) => {
-    db('users')
-        .select('*')
-        .then((users) => {
-            res.json(users);
-        })
-        .catch((error) => {
+    try {
+        await db('users')
+            .select('id', 'username', 'email')
+            .then((users) => {
+                res.json(users);
+            })
+    } catch {
+        (error) => {
             console.error(error);
             res.status(500).json({
-                error: 'Unable to fetch users'
+                status: 'Internal Server Error'
             });
-        });
-})
+        }
+    };
+});
 
+/**
+ * Register a new user.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
 router.post('/users/register', async (req, res) => {
     try {
         const {
@@ -43,15 +62,16 @@ router.post('/users/register', async (req, res) => {
         const userUUID = uuidv4();
 
         if (!username || !email || !password) {
-            res.status(400).send({
-                status: "Bad request",
+            res.status(400).json({
+                status: "Bad Request",
                 message: "Some fields are missing: username, email, password"
             });
         } else {
             const existingUser = await db("users").select().where("email", email).first();
 
             if (existingUser) {
-                res.status(409).send({
+                res.status(409).json({
+                    status: "Conflict",
                     message: "User with this email already exists"
                 });
             } else {
@@ -61,7 +81,8 @@ router.post('/users/register', async (req, res) => {
                     password: password
                 }).returning();
 
-                res.status(200).send({
+                res.status(200).json({
+                    status: "OK",
                     message: `User has been registered!: ${username, email}`
                 });
             }
@@ -69,11 +90,20 @@ router.post('/users/register', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            error: 'Internal Server Error'
+            status: 'Internal Server Error',
+            error: error.message, // Include additional error details if needed
         });
     }
 });
 
+
+/**
+ * Log in a user.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
 router.post('/users/login', async (req, res) => {
     try {
         const {
@@ -99,14 +129,14 @@ router.post('/users/login', async (req, res) => {
                         data: existingUser
                     });
                 } else {
-                    res.status(401).send({
-                        status: "Bad request",
+                    res.status(401).json({
+                        status: "Unauthorized",
                         message: "Wrong password"
                     });
                 }
             } else {
-                res.status(401).send({
-                    status: "Bad request",
+                res.status(401).json({
+                    status: "Unauthorized",
                     message: "User with this email doesn't exist"
                 });
             }
@@ -114,11 +144,18 @@ router.post('/users/login', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            error: 'Internal Server Error'
+            status: 'Internal Server Error'
         });
     }
 });
 
+/**
+ * Add a song to favorites of a user.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
 router.post('/users/add-favorite-song', async (req, res) => {
     const {
         user_id,
@@ -133,6 +170,7 @@ router.post('/users/add-favorite-song', async (req, res) => {
 
         if (existingFavoriteSong) {
             res.status(409).send({
+                status: "Conflict",
                 message: "This song is already in favorites",
             });
         } else {
@@ -142,6 +180,7 @@ router.post('/users/add-favorite-song', async (req, res) => {
             });
 
             res.status(200).send({
+                status: "OK request",
                 message: "Song added to favorites",
             });
         }
@@ -152,7 +191,14 @@ router.post('/users/add-favorite-song', async (req, res) => {
         });
     }
 });
-//DELETE a favourite song of a user
+
+/**
+ * Delete a favorite song of a user.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
 router.delete('/users/delete-favorite-song', async (req, res) => {
     const {
         user_id,
@@ -175,28 +221,38 @@ router.delete('/users/delete-favorite-song', async (req, res) => {
 
             if (deletedCount > 0) {
                 res.status(200).send({
+                    status: "OK request",
                     message: "Song removed from favorites",
                 });
             } else {
                 res.status(404).send({
-                    message: "Song not found in favorites",
+                    status: "Bad request",
+                    message: "Song not removed from favorites",
                 });
             }
         } else {
 
             res.status(409).send({
+                status: "Bad request",
                 message: "This song is not in favorites",
             });
         }
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            error: 'Unable to add song to favorites',
+            error: 'Unable to delete song from favorites',
         });
     }
 });
-//GET favourite song of a user
-router.get('/users/favorite_songs/:user_id', async (req, res) => {
+
+/**
+ * Get favorite songs of a user.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
+router.get('/users/:user_id/favorite-songs', async (req, res) => {
     const user_id = req.params.user_id;
     console.log(user_id);
     try {
@@ -217,7 +273,8 @@ router.get('/users/favorite_songs/:user_id', async (req, res) => {
 
         console.log(favorite_songs);
 
-        res.status(200).json({
+        res.status(200).send({
+            status: "OK request",
             data: favorite_songs
         });
 

@@ -22,7 +22,7 @@ const {
     checkUserName,
     checkPassword,
     checkUserEmail
-} = require("../helpers/endPointChecker.js");
+} = require("../helpers/userEndPointChecker.js");
 
 /**
  * Get all users.

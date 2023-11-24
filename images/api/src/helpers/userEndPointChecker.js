@@ -36,6 +36,13 @@ function checkPassword(password) {
 }
 
 
+/**
+ * Validates a user email.
+ *
+ * @param {string} email - The email to be validated.
+ * @returns {boolean} - Returns true if the email is valid; otherwise, false.
+ */
+
 function checkUserEmail(email) {
     if (email == null ||
         email.length <= 5 ||

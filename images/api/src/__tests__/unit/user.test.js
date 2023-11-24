@@ -1,6 +1,6 @@
 const {
     checkUserName
-} = require("../../helpers/endPointChecker.js")
+} = require("../../helpers/userEndPointChecker.js")
 
 
 test("check name", () => {

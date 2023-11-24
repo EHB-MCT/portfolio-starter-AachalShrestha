@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run migrate && nodemon src/index.js --legacy-watch",
     "migrate": "npx knex migrate:latest --cwd src",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --watchAll"
   },
   "keywords": [],
   "author": "",
@@ -27,5 +27,8 @@
   "bugs": {
     "url": "https://github.com/EHB-MCT/portfolio-starter-AachalShrestha/issues"
   },
-  "homepage": "https://github.com/EHB-MCT/portfolio-starter-AachalShrestha#readme"
+  "homepage": "https://github.com/EHB-MCT/portfolio-starter-AachalShrestha#readme",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
 }

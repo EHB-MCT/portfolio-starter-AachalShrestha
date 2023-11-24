@@ -18,6 +18,10 @@ router.use(bodyParser.json());
 router.use(express.json());
 router.use(bodyParser.json());
 
+const {
+    checkUserName,
+    checkPassword
+} = require("../helpers/endPointChecker.js");
 
 /**
  * Get all users.
@@ -61,32 +65,40 @@ router.post('/users/register', async (req, res) => {
 
         const userUUID = uuidv4();
 
-        if (!username || !email || !password) {
-            res.status(400).json({
-                status: "Bad Request",
-                message: "Some fields are missing: username, email, password"
-            });
-        } else {
-            const existingUser = await db("users").select().where("email", email).first();
-
-            if (existingUser) {
-                res.status(409).json({
-                    status: "Conflict",
-                    message: "User with this email already exists"
+        if (checkUserName(username) && checkPassword(password)) {
+            if (!username || !email || !password) {
+                res.status(400).json({
+                    status: "Bad Request",
+                    message: "Some fields are missing: username, email, password"
                 });
             } else {
-                const resp = await db("users").insert({
-                    username: username,
-                    email: email,
-                    password: password
-                }).returning();
+                const existingUser = await db("users").select().where("email", email).first();
 
-                res.status(200).json({
-                    status: "OK",
-                    message: `User has been registered!: ${username, email}`
-                });
+                if (existingUser) {
+                    res.status(409).json({
+                        status: "Conflict",
+                        message: "User with this email already exists"
+                    });
+                } else {
+                    const resp = await db("users").insert({
+                        username: username,
+                        email: email,
+                        password: password
+                    }).returning();
+
+                    res.status(200).json({
+                        status: "OK",
+                        message: `User has been registered!: ${username, email}`
+                    });
+                }
             }
+        } else {
+            res.status(401).send({
+                message: "username or password not correctly formatted"
+            });
         }
+
+
     } catch (error) {
         console.error(error);
         res.status(500).json({

@@ -35,7 +35,23 @@ function checkPassword(password) {
     return true;
 }
 
+
+function checkUserEmail(email) {
+    if (email == null ||
+        email.length <= 5 ||
+        typeof email !== "string" ||
+        email.length > 20) {
+        return false;
+    }
+    if (email.includes("@") && email.includes(".com")) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 module.exports = {
     checkUserName,
-    checkPassword
+    checkPassword,
+    checkUserEmail
 }

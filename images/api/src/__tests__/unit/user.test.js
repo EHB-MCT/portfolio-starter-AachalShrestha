@@ -26,3 +26,16 @@ test("check password", () => {
     expect(checkUserName("onetwothree")).toBe(true);
     expect(checkUserName("fart")).toBe(true);
 })
+
+test("check email", () => {
+    expect(checkUserName("")).toBe(false);
+    expect(checkUserName(1)).toBe(false);
+    expect(checkUserName("dhqsdjfqdsksdkldskjfqldkfqslddfs")).toBe(false);
+    expect(checkUserName(null)).toBe(false);
+    expect(checkUserName("u")).toBe(false);
+    expect(checkUserName("aachal.gmail.com")).toBe(false);
+    expect(checkUserName("aachal.gmail@")).toBe(false);
+
+    expect(checkUserName("aachal@gmail.com")).toBe(true);
+    expect(checkUserName("onetwothree@yahoo.com")).toBe(true);
+})

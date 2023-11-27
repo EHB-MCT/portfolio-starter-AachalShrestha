@@ -18,11 +18,17 @@ router.use(bodyParser.json());
 router.use(express.json());
 router.use(bodyParser.json());
 
+
 const {
     checkUserName,
     checkPassword,
     checkUserEmail
 } = require("../helpers/userEndPointChecker.js");
+
+
+const {
+    checkNumber
+} = require("../helpers/songEndpointChecker.js");
 
 /**
  * Get all users.
@@ -181,33 +187,42 @@ router.post('/users/add-favorite-song', async (req, res) => {
         favorite_song_id
     } = req.body;
 
+
     try {
-        const existingFavoriteSong = await db("users_songs").select().where({
-            user_id,
-            favorite_song_id
-        }).first();
-
-        if (existingFavoriteSong) {
-            res.status(409).send({
-                status: "Conflict",
-                message: "This song is already in favorites",
-            });
-        } else {
-            await db("users_songs").insert({
+        if (checkNumber(user_id) && checkNumber(favorite_song_id)) {
+            const existingFavoriteSong = await db("users_songs").select().where({
                 user_id,
-                favorite_song_id,
+                favorite_song_id
+            }).first();
+
+            if (existingFavoriteSong) {
+                res.status(409).send({
+                    status: "Conflict",
+                    message: "This song is already in favorites",
+                });
+            } else {
+                await db("users_songs").insert({
+                    user_id,
+                    favorite_song_id,
+                });
+
+                res.status(200).send({
+                    status: "OK request",
+                    message: "Song added to favorites",
+                });
+            }
+        } else {
+            res.status(401).send({
+                message: "song id or user id not correctly formatted"
             });
 
-            res.status(200).send({
-                status: "OK request",
-                message: "Song added to favorites",
-            });
         }
     } catch (error) {
         console.error(error);
         res.status(500).json({
             error: 'Unable to add song to favorites',
         });
+
     }
 });
 

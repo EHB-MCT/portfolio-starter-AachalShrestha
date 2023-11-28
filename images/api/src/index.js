@@ -24,3 +24,5 @@ app.listen(PORT, () => {
 app.use('/', artistsRoutes);
 app.use('/', songsRoutes);
 app.use('/', userRoutes);
+
+module.exports = app;

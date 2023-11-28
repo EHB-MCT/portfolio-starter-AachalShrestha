@@ -1,5 +1,8 @@
 const {
-    checkUserName
+    checkUserName,
+    checkPassword,
+    checkUserEmail
+
 } = require("../../helpers/userEndPointChecker.js")
 
 
@@ -16,26 +19,26 @@ test("check name", () => {
 })
 
 test("check password", () => {
-    expect(checkUserName("")).toBe(false);
-    expect(checkUserName(1)).toBe(false);
-    expect(checkUserName("dhqsdjfqdsksdkldskjfqldkfqslddfs")).toBe(false);
-    expect(checkUserName(null)).toBe(false);
-    expect(checkUserName("u")).toBe(false);
+    expect(checkPassword("")).toBe(false);
+    expect(checkPassword(1)).toBe(false);
+    expect(checkPassword("dhqsdjfqdsksdkldskjfqldkfqslddfs")).toBe(false);
+    expect(checkPassword(null)).toBe(false);
+    expect(checkPassword("u")).toBe(false);
 
-    expect(checkUserName("aachal123")).toBe(true);
-    expect(checkUserName("onetwothree")).toBe(true);
-    expect(checkUserName("fart")).toBe(true);
+    expect(checkPassword("aachal123")).toBe(true);
+    expect(checkPassword("onetwothree")).toBe(true);
+    expect(checkPassword("fart")).toBe(true);
 })
 
 test("check email", () => {
-    expect(checkUserName("")).toBe(false);
-    expect(checkUserName(1)).toBe(false);
-    expect(checkUserName("dhqsdjfqdsksdkldskjfqldkfqslddfs")).toBe(false);
-    expect(checkUserName(null)).toBe(false);
-    expect(checkUserName("u")).toBe(false);
-    expect(checkUserName("aachal.gmail.com")).toBe(false);
-    expect(checkUserName("aachal.gmail@")).toBe(false);
+    expect(checkUserEmail("")).toBe(false);
+    expect(checkUserEmail(1)).toBe(false);
+    expect(checkUserEmail("dhqsdjfqdsksdkldskjfqldkfqslddfs")).toBe(false);
+    expect(checkUserEmail(null)).toBe(false);
+    expect(checkUserEmail("u")).toBe(false);
+    expect(checkUserEmail("aachal.gmail.com")).toBe(false);
+    expect(checkUserEmail("aachal.gmail@")).toBe(false);
 
-    expect(checkUserName("aachal@gmail.com")).toBe(true);
-    expect(checkUserName("onetwothree@yahoo.com")).toBe(true);
+    expect(checkUserEmail("aachal@gmail.com")).toBe(true);
+    expect(checkUserEmail("onetwothree@yahoo.com")).toBe(true);
 })

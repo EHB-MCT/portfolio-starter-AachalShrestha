@@ -1,9 +1,33 @@
 const request = require('supertest');
-const app = require('../../index.js');
-const knexfile = require('../../knexfile.js');
+const app = require('../../app.js');
+const knexfile = require('../../db/knexfile.js');
 const db = require('knex')(knexfile.development);
 
+
+const user = {
+    username: 'thealiciachickenwings',
+    password: 'alicia',
+    email: 'alicia@gmail.com'
+};
+
 describe('GET /users', () => {
+    beforeAll(async () => {
+        await db.raw('BEGIN');
+        await request(app).post('/users').send(user);
+    });
+
+    afterAll(async () => {
+        await db.destroy();
+    });
+
+    test('should return a list of all users', async () => {
+        const response = await request(app).get('/users');
+        expect(response.status).toBe(200);
+        expect(Array.isArray(response.body)).toBe(true);
+    });
+});
+
+describe('GET /users/:userid', () => {
     beforeAll(async () => {
         await db.raw('BEGIN');
     });
@@ -12,20 +36,15 @@ describe('GET /users', () => {
         await db.destroy();
     });
 
-    test('should return a list of all users', async () => {
-        // Perform the request to the /users endpoint
-        const response = await request(app).get('/users');
-
-        // Check if the status code is 200 (OK)
+    test('should return user by id', async () => {
+        const response = await request(app).get('/users/1');
         expect(response.status).toBe(200);
+        expect(response.body.id).toBe(1); // Assuming user with id 1 exists
+    });
 
-        // Add more assertions based on your API response structure and expectations
-        // For example, you might check if the response body is an array of users
-        expect(Array.isArray(response.body)).toBe(true);
-        // You might also check specific properties of the users in the array
-        // ...
-
-        // If you're using a transaction, you may need to commit it here
-        // await db.commit();
+    test('should return 404 for non-existent user', async () => {
+        const nonExistentUserId = 999;
+        const response = await request(app).get(`/users/${nonExistentUserId}`);
+        expect(response.status).toBe(404);
     });
 });

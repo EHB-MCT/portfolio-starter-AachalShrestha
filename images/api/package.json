@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "test-watch": "jest --watchAll --detectOpenHandles",
-    "prep": " npx knex migrate:latest --cwd ./src",
+    "prep": " npx knex migrate:latest --cwd ./src/db",
     "dev": " npm run prep && npm run test-watch",
     "start": " npm run prep && nodemon src/index.js",
     "test": "jest --detectOpenHandles --forceExit",

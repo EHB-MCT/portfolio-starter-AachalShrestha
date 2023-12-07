@@ -4,13 +4,13 @@
 
 const express = require('express');
 const knex = require('knex');
-const knexfile = require('../knexfile');
+const knexfile = require('../db/knexfile.js');
 const {
     v4: uuidv4
 } = require('uuid');
 const router = express.Router();
 const PORT = 3000;
-
+console.log(knexfile.development)
 const db = knex(knexfile.development);
 
 const bodyParser = require('body-parser');

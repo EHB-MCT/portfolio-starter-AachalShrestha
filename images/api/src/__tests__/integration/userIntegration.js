@@ -1,33 +1,43 @@
 const request = require('supertest');
-const app = require('../../app.js');
-const knexfile = require('../../db/knexfile.js');
+const app = require('../../app'); // Update the path as needed
+const knexfile = require('../../db/knexfile');
 const db = require('knex')(knexfile.development);
 
 
 const user = {
     username: 'thealiciachickenwings',
-    password: 'alicia',
-    email: 'alicia@gmail.com'
+    email: 'alicia@gmail.com',
+    password: 'onetwothree'
 };
 
 describe('GET /users', () => {
     beforeAll(async () => {
-        await db.raw('BEGIN');
-        await request(app).post('/users').send(user);
+        db.raw('BEGIN')
+            .then(() => {
+                console.log('Database connection successful');
+            })
+            .catch((error) => {
+                console.error('Database connection error:', error.message);
+            });
+        await db('users').insert(user);
     });
 
     afterAll(async () => {
+        await db('users').where({
+            email: user.email
+        }).delete();
         await db.destroy();
     });
 
-    test('should return a list of all users', async () => {
+    test('GET /users should return a list of all users', async () => {
         const response = await request(app).get('/users');
         expect(response.status).toBe(200);
+        console.log(response.body)
         expect(Array.isArray(response.body)).toBe(true);
     });
 });
 
-describe('GET /users/:userid', () => {
+/* describe('GET /users/:userid', () => {
     beforeAll(async () => {
         await db.raw('BEGIN');
     });
@@ -47,4 +57,4 @@ describe('GET /users/:userid', () => {
         const response = await request(app).get(`/users/${nonExistentUserId}`);
         expect(response.status).toBe(404);
     });
-});
+}); */

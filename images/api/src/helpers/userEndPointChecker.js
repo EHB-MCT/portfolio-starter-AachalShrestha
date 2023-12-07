@@ -42,14 +42,11 @@ function checkPassword(password) {
  * @param {string} email - The email to be validated.
  * @returns {boolean} - Returns true if the email is valid; otherwise, false.
  */
-
 function checkUserEmail(email) {
-    if (email == null ||
-        email.length <= 5 ||
-        typeof email !== "string" ||
-        email.length > 20) {
+    if (typeof email !== "string" || email.length < 6 || email.length > 35) {
         return false;
     }
+
     if (email.includes("@") && email.includes(".com")) {
         return true;
     } else {

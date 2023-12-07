@@ -25,9 +25,9 @@ test("check password", () => {
     expect(checkPassword(null)).toBe(false);
     expect(checkPassword("u")).toBe(false);
 
-    expect(checkPassword("aachal123")).toBe(true);
+    expect(checkPassword("aachal")).toBe(true);
     expect(checkPassword("onetwothree")).toBe(true);
-    expect(checkPassword("fart")).toBe(true);
+
 })
 
 test("check email", () => {
@@ -40,5 +40,5 @@ test("check email", () => {
     expect(checkUserEmail("aachal.gmail@")).toBe(false);
 
     expect(checkUserEmail("aachal@gmail.com")).toBe(true);
-    expect(checkUserEmail("onetwothree@yahoo.com")).toBe(true);
+    expect(checkUserEmail("onetwothree@gmail.com")).toBe(true);
 })

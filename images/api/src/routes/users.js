@@ -55,6 +55,45 @@ router.get('/users', async (req, res) => {
     };
 });
 
+router.get('/users/:userid', async (req, res) => {
+    const userId = req.params.userid;
+
+    if (checkNumber(userId)) {
+        try {
+            // Use async/await for database query
+            const user = await db('users')
+                .select()
+                .where("id", userId)
+                .first();
+
+            // Check if the user exists
+            if (user) {
+                res.status(200).send({
+                    status: "OK request",
+                    data: user
+                });
+            } else {
+                // Handle case where user with the given ID is not found
+                res.status(404).json({
+                    status: 'User not found'
+                });
+            }
+        } catch (error) {
+            console.error(error);
+            // Handle database query error
+            res.status(500).json({
+                status: 'Internal Server Error'
+            });
+        }
+    } else {
+        // Handle case where userId is not a valid number
+        res.status(401).send({
+            message: "User ID not correctly formatted"
+        });
+    }
+});
+
+
 /**
  * Register a new user.
  *

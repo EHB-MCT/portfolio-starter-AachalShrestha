@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "test-watch": "jest --watch --detectOpenHandles",
+    "test-watch": "jest --watchAll --detectOpenHandles",
     "prep": " npx knex migrate:latest --cwd ./src",
     "dev": " npm run prep && npm run test-watch",
     "start": " npm run prep && nodemon src/index.js",

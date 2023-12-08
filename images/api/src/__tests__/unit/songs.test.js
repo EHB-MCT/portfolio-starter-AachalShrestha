@@ -3,7 +3,7 @@ const {
 } = require("../../helpers/songEndpointChecker.js")
 
 
-test("check name", () => {
+test("check number", () => {
     expect(checkNumber("")).toBe(false);
     expect(checkNumber("Dev is cool")).toBe(false);
     expect(checkNumber("dhqsdjfqdsksdkldskjfqldkfqslddfs")).toBe(false);
@@ -12,5 +12,5 @@ test("check name", () => {
 
     expect(checkNumber(1)).toBe(true);
     expect(checkNumber(25)).toBe(true);
-    expect(checkNumber(266)).toBe(true);
+    expect(checkNumber(158)).toBe(true);
 })

@@ -10,7 +10,6 @@ const {
 } = require('uuid');
 const router = express.Router();
 const PORT = 3000;
-console.log(knexfile.development)
 const db = knex(knexfile.development);
 
 const bodyParser = require('body-parser');
@@ -56,20 +55,20 @@ router.get('/users', async (req, res) => {
 });
 
 router.get('/users/:userid', async (req, res) => {
-    const userId = req.params.userid;
+    const userId = parseInt(req.params.userid, 10);
+    console.log('Received user ID:', userId);
 
     if (checkNumber(userId)) {
         try {
             // Use async/await for database query
             const user = await db('users')
-                .select()
+                .select('*')
                 .where("id", userId)
                 .first();
-
+            console.log("user", user);
             // Check if the user exists
             if (user) {
                 res.status(200).send({
-                    status: "OK request",
                     data: user
                 });
             } else {

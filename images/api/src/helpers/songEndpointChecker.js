@@ -5,18 +5,20 @@
  * @returns {boolean} - Returns true if the number is valid; otherwise, false.
  */
 function checkNumber(number) {
-    // Check if number is not null or undefined, is an integer, and has a valid length
+    console.log('Input value:', number);
+
     if (
         number != null &&
-        Number.isInteger(number) &&
-        String(number).length >= 1 &&
-        String(number).length <= 20
+        typeof number === 'number' &&
+        isFinite(number) &&
+        String(number).trim() !== ''
     ) {
         return true;
+    } else {
+        return false;
     }
-
-    return false;
 }
+
 
 module.exports = {
     checkNumber

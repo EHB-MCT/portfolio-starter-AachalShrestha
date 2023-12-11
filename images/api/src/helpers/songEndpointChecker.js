@@ -5,8 +5,6 @@
  * @returns {boolean} - Returns true if the number is valid; otherwise, false.
  */
 function checkNumber(number) {
-    console.log('Input value:', number);
-
     if (
         number != null &&
         typeof number === 'number' &&

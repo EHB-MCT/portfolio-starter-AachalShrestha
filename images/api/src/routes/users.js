@@ -55,28 +55,32 @@ router.get('/users', async (req, res) => {
 });
 
 router.get('/users/:userid', async (req, res) => {
-    const userId = parseInt(req.params.userid, 10);
-    console.log('Received user ID:', userId);
+    const id = parseInt(req.params.userid, 10);
+    console.log('Received user ID:', id);
 
-    if (checkNumber(userId)) {
+    if (checkNumber(id)) {
         try {
             // Use async/await for database query
-            const user = await db('users')
-                .select('*')
-                .where("id", userId)
-                .first();
-            console.log("user", user);
-            // Check if the user exists
-            if (user) {
-                res.status(200).send({
-                    data: user
+            const allusers = await db('users').select('*');
+            console.log("USER ROUTE all users:", allusers)
+            await db('users')
+                .where({
+                    id
+                })
+                .first().then((user) => {
+                    console.log("user", user);
+                    if (user) {
+                        res.status(200).send({
+                            data: user
+                        });
+                    } else {
+                        // Handle case where user with the given ID is not found
+                        res.status(404).json({
+                            status: 'User not found'
+                        });
+                    }
                 });
-            } else {
-                // Handle case where user with the given ID is not found
-                res.status(404).json({
-                    status: 'User not found'
-                });
-            }
+
         } catch (error) {
             console.error(error);
             // Handle database query error

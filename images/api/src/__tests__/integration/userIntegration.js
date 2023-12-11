@@ -9,12 +9,11 @@ const user = {
     password: 'onetwothree'
 };
 
-let USERID;
 
 describe('users', () => {
     beforeAll(async () => {
         await db.raw('BEGIN');
-        [USERID] = await db('users').insert(user).returning('id');
+        await db('users').insert(user).returning('id');
     });
 
     afterAll(async () => {
@@ -26,11 +25,19 @@ describe('users', () => {
 
     test('GET /users should return a list of all users', async () => {
         const response = await request(app).get('/users');
+        const users = response.body; // Assuming your users are nested under 'data'
+        console.log("uses:", users)
         expect(response.status).toBe(200);
-
-        const users = response.body;
         expect(Array.isArray(users)).toBe(true);
+
+        // Check each user in the array
+        users.forEach(user => {
+            expect(user).toHaveProperty('id');
+            expect(user).toHaveProperty('username');
+            expect(user).toHaveProperty('email');
+        });
     });
+
 
 });
 

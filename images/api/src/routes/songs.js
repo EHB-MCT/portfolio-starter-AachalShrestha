@@ -9,6 +9,9 @@ const PORT = 3000;
 
 const db = knex(knexfile.development);
 
+const {
+    checkNumber
+} = require('../helpers/songEndpointChecker');
 const bodyParser = require('body-parser');
 router.use(bodyParser.json());
 router.use(express.json());
@@ -47,24 +50,30 @@ router.get('/songs', (req, res) => {
  */
 router.get('/songs/:artist_id', async (req, res) => {
     const artist_id = req.params.artist_id;
-
-    try {
-        const resp = await db('songs')
-            .select()
-            .where("artist_id", artist_id)
-            .then((songs) => {
-                res.status(200).send({
-                    status: "OK request",
-                    message: `Got all songs of artist with ID:${artist_id}`,
-                    data: songs
+    if (checkNumber(artist_id)) {
+        try {
+            const resp = await db('songs')
+                .select()
+                .where("artist_id", artist_id).first()
+                .then((songs) => {
+                    res.status(200).send({
+                        status: "OK request",
+                        message: `Got all songs of artist with ID:${artist_id}`,
+                        data: songs
+                    });
                 });
+        } catch (error) {
+            console.log(err);
+            res.status(500).json({
+                error: 'Unable to fetch songs'
             });
-    } catch (error) {
-        console.log(err);
-        res.status(500).json({
-            error: 'Unable to fetch songs'
+        }
+    } else {
+        res.status(401).send({
+            message: "Artist ID not correctly formatted"
         });
     }
+
 });
 
 /**

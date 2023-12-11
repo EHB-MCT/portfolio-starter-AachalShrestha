@@ -7,7 +7,7 @@
     "test-watch": "jest --watchAll --detectOpenHandles",
     "prep": " npx knex migrate:latest --cwd ./src/db",
     "dev": " npm run prep && npm run test-watch",
-    "start": " npm run prep && nodemon src/index.js",
+    "start": " npm run prep && node src/index.js",
     "test": "jest --detectOpenHandles --forceExit",
     "nm": "nodemon src/index.js"
   },

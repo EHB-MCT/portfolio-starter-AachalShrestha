@@ -45,8 +45,6 @@ describe('POST /songs', () => {
         const response = await request(app)
             .post('/songs')
             .send(testSong);
-
-        console.log("POST USER: response", response.body);
         expect(response.status).toBe(201);
         const responseBody = response.body;
         expect(responseBody.status).toBe('OK Request');

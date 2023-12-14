@@ -12,13 +12,12 @@ const user = {
 
 describe('users', () => {
     beforeAll(async () => {
-        await db.raw('BEGIN');
-        await db('users').insert(user).returning('id');
+        [userId] = await db('users').insert(user).returning('id');
     });
 
     afterAll(async () => {
         await db('users').where({
-            email: user.email
+            email: 'alicia@gmail.com'
         }).delete();
         await db.destroy();
     });

@@ -120,37 +120,32 @@ router.post('/users/register', async (req, res) => {
         } = req.body;
 
         const userUUID = uuidv4();
+        console.log("USER:", username, email, password)
+        if (checkUserName(username) && checkPassword(password) && checkUserEmail(email)) {
+            const existingUser = await db("users").select().where("email", email).first();
 
-        if (checkUserName(username) && checkPassword(password)) {
-            if (!username || !email || !password) {
-                res.status(400).json({
-                    status: "Bad Request",
-                    message: "Some fields are missing: username, email, password"
+            if (existingUser) {
+                res.status(409).json({
+                    status: "Conflict",
+                    message: "User with this email already exists"
                 });
             } else {
-                const existingUser = await db("users").select().where("email", email).first();
+                const resp = await db("users").insert({
+                    username: username,
+                    email: email,
+                    password: password,
+                    uuid: userUUID
+                }).returning();
 
-                if (existingUser) {
-                    res.status(409).json({
-                        status: "Conflict",
-                        message: "User with this email already exists"
-                    });
-                } else {
-                    const resp = await db("users").insert({
-                        username: username,
-                        email: email,
-                        password: password
-                    }).returning();
-
-                    res.status(200).json({
-                        status: "OK",
-                        message: `User has been registered!: ${username, email}`
-                    });
-                }
+                res.status(201).json({
+                    status: "OK Request",
+                    message: `User has been registered!: ${username, email}`
+                });
             }
+
         } else {
             res.status(401).send({
-                message: "username or password not correctly formatted"
+                message: "username, email or password not correctly formatted"
             });
         }
 

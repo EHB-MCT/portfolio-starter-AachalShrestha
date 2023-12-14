@@ -7,16 +7,11 @@ const ARTIST = {
     name: 'testartist'
 };
 
-let ARTIST_ID
 
-describe('Song Integration Tests', () => {
+describe('GET /artists', () => {
     beforeAll(async () => {
         try {
-            // Insert the artist
-            const [insertedArtistId] = await db('artists').insert(ARTIST).returning('id');
-            ARTIST_ID = insertedArtistId.id;
-
-            // Insert the song using the retrieved artistId
+            await db('artists').insert(ARTIST).returning('id');
         } catch (error) {
             console.error('Error during setup:', error.message);
         }
@@ -36,7 +31,7 @@ describe('Song Integration Tests', () => {
         }
     });
 
-    test('GET /songs should return a list of all artists', async () => {
+    test('Should return a list of all artists', async () => {
         const response = await request(app).get('/artists');
         expect(response.status).toBe(200);
         expect(Array.isArray(response.body.data)).toBe(true);

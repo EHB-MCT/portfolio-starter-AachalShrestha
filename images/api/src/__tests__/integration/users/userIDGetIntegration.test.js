@@ -1,6 +1,6 @@
 const request = require('supertest');
-const app = require('../../app');
-const knexfile = require('../../db/knexfile');
+const app = require('../../../app');
+const knexfile = require('../../../db/knexfile');
 const db = require('knex')(knexfile.development);
 
 const user = {

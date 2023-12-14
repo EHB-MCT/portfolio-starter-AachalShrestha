@@ -54,6 +54,13 @@ router.get('/users', async (req, res) => {
     };
 });
 
+/**
+ * Get a user by ID.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
 router.get('/users/:userid', async (req, res) => {
     const id = parseInt(req.params.userid, 10);
     console.log('Received user ID:', id);

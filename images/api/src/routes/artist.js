@@ -53,11 +53,11 @@ router.post('/artists', async (req, res) => {
     } = req.body;
     const artistUUID = uuidv4();
     const existingArtist = await db("artists").select().where("name", name).first();
-
+    console.log("existingartist", existingArtist)
     if (checkArtistName(name)) {
         if (existingArtist) {
             res.status(409).send({
-                status: "OK request",
+                status: "OK Request",
                 message: "This artist already exists",
             });
         } else {
@@ -68,15 +68,15 @@ router.post('/artists', async (req, res) => {
                 })
                 .returning();
 
-            res.status(200).send({
-                status: "OK request",
+            res.status(201).send({
+                status: "OK Request",
                 message: `Artist added!: ${name}`,
             });
         }
     } else {
 
         res.status(401).send({
-            message: "artist name not correctly formatted"
+            message: "Artist name not correctly formatted"
         });
 
     }

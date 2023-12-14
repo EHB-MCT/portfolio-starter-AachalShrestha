@@ -26,7 +26,6 @@ describe('users', () => {
     test('GET /users should return a list of all users', async () => {
         const response = await request(app).get('/users');
         const users = response.body; // Assuming your users are nested under 'data'
-        console.log("uses:", users)
         expect(response.status).toBe(200);
         expect(Array.isArray(users)).toBe(true);
 

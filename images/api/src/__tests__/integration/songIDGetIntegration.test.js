@@ -25,7 +25,6 @@ describe('GET /songs/:artist_id', () => {
             // Insert the artist
             const [insertedArtistId] = await db('artists').insert(ARTIST).returning('id');
             artistId = insertedArtistId.id;
-            console.log("ARTIST ID", artistId);
             await db('songs').insert({
                 ...SONG1,
                 artist_id: artistId
@@ -60,7 +59,6 @@ describe('GET /songs/:artist_id', () => {
 
     test('should return all songs from a certain artist', async () => {
         const response = await request(app).get(`/songs/${artistId}`);
-        console.log("SONGGIDGETINTEGRATION: respones", response.body);
         expect(response.status).toBe(200);
         const responseBody = response.body;
         expect(responseBody.status).toBe('OK request');
@@ -74,7 +72,6 @@ describe('GET /songs/:artist_id', () => {
     test('should return 404 for non-existent artist', async () => {
         const nonExistentArtistId = 999;
         const response = await request(app).get(`/songs/${nonExistentArtistId}`);
-        console.log("NONEXISTENT ARTSITS:", response.body)
         expect(response.status).toBe(404);
     });
 

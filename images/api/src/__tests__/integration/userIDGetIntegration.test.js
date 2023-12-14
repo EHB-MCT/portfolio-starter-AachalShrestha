@@ -23,12 +23,10 @@ describe('GET /users/:userid', () => {
             email: 'alicia@gmail.com'
         }).delete();
         await db.destroy();
-        console.log("Database connection closed");
     });
 
     test('should return user by id', async () => {
         const response = await request(app).get(`/users/${userId.id}`);
-
         expect(response.status).toBe(200);
         expect(response.body.data).toHaveProperty('id', userId.id);
     });

@@ -57,14 +57,14 @@ describe('POST /songs', () => {
         const response = await request(app)
             .post('/songs')
             .send({
-                name: 'testSong',
+                name: 'testSong2',
                 artist: nonExistentArtistName
             });
         console.log("NONEXISTENT ARTSITS:", response.body)
         expect(response.status).toBe(404);
     });
 
-    test('should return 409 for already exis', async () => {
+    test('should return 409 for already existing song', async () => {
         const incorrectlyFormattedArtistName = 123;
         const response = await request(app)
             .post('/songs')
@@ -74,5 +74,16 @@ describe('POST /songs', () => {
             });
         expect(response.status).toBe(401);
         expect(response.body.message).toBe('Artist name not correctly formatted');
+    });
+    test('should return 404 for a non existing artist', async () => {
+        const incorrectlyFormattedArtistName = "newartist";
+        const response = await request(app)
+            .post('/songs')
+            .send({
+                name: 'testSong3',
+                artist: incorrectlyFormattedArtistName
+            });
+        expect(response.status).toBe(404);
+        expect(response.body.message).toBe("This artist doesn't exist");
     });
 });

@@ -112,23 +112,14 @@ router.post('/songs', async (req, res) => {
         const songUUID = uuidv4();
 
         try {
-            const existingSong = await db('songs').select("id").where("name", name);
-
-            if (existingSong.length > 0) {
-                return res.status(409).json({
-                    status: "Bad Request",
-                    message: "This song already exists"
-                });
-            }
-
             const existingArtist = await db('artists').select("id").where("name", artist).first();
 
-            const toPostSong = {
-                name: name,
-                artist_id: existingArtist.id,
-                uuid: songUUID
-            }
             if (existingArtist) {
+                const toPostSong = {
+                    name: name,
+                    artist_id: existingArtist.id,
+                    uuid: songUUID
+                }
                 const resp = await db('songs')
                     .insert(toPostSong);
 

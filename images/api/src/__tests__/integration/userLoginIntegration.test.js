@@ -3,16 +3,16 @@ const app = require('../../app'); // Update the path as needed
 const knexfile = require('../../db/knexfile');
 const db = require('knex')(knexfile.development);
 
-describe('POST /user/register', () => {
+describe('POST /user/login', () => {
     let userId;
     const existingUser = {
         username: 'existingUser',
         email: 'existing@user.com',
         password: 'onetwothree'
     };
-    const newUser = {
-        username: 'newUser',
-        email: 'new@user.com',
+    const nonExistingUser = {
+        username: 'noUser',
+        email: 'no@user.com',
         password: 'onetwothree'
     };
 
@@ -26,41 +26,40 @@ describe('POST /user/register', () => {
             email: existingUser.email
         }).delete();
         await db('users').where({
-            email: newUser.email
+            email: nonExistingUser.email
         }).delete();
         await db.destroy();
     });
 
 
-    test('should return 201 to register a new user', async () => {
+    test('should return 201 to login', async () => {
         const response = await request(app)
-            .post('/users/register')
-            .send(newUser);
+            .post('/users/login')
+            .send(existingUser);
 
         console.log("register USER: response", response.body);
-        expect(response.status).toBe(201);
+        expect(response.status).toBe(200);
         const responseBody = response.body;
         expect(responseBody.status).toBe('OK Request');
     });
 
-    test('should return 409 for already existing user', async () => {
+    test('should return 401 inexistent email', async () => {
         const response = await request(app)
-            .post('/users/register')
-            .send(existingUser);
-        expect(response.status).toBe(409);
-        expect(response.body.message).toBe('User with this email already exists');
+            .post('/users/login')
+            .send(nonExistingUser);
+        expect(response.status).toBe(401);
+        expect(response.body.message).toBe("User with this email doesn't exist");
     });
 
-    test('should return 401 incorrectly formatted fields', async () => {
-        const incorrectlyFormattedEmail = "I'm a user";
+    test('should return 401 for wrong password', async () => {
         const response = await request(app)
-            .post('/users/register')
+            .post('/users/login')
             .send({
-                username: "newUser",
-                email: incorrectlyFormattedEmail,
-                password: "newPassword"
+                email: existingUser.email,
+                password: "wrongPassword"
             });
         expect(response.status).toBe(401);
-        expect(response.body.message).toBe("username, email or password not correctly formatted");
+        expect(response.body.message).toBe('Wrong password');
     });
+
 });

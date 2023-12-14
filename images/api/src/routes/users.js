@@ -176,35 +176,30 @@ router.post('/users/login', async (req, res) => {
 
         const userUUID = uuidv4();
 
-        if (checkUserEmail(email)) {
-            if (!email || !password) {
-                res.status(400).send({
-                    status: "Bad request",
-                    message: "Some fields are missing: email, password"
-                });
-            } else {
-                const existingUser = await db("users").select().where("email", email).first();
-                console.log(existingUser);
-                if (existingUser) {
-                    if (existingUser.password == password) {
-                        res.status(200).send({
-                            status: "OK request",
-                            message: "logged in",
-                            data: existingUser
-                        });
-                    } else {
-                        res.status(401).json({
-                            status: "Unauthorized",
-                            message: "Wrong password"
-                        });
-                    }
+        if (checkUserEmail(email) && checkPassword(password)) {
+
+            const existingUser = await db("users").select().where("email", email).first();
+            console.log(existingUser);
+            if (existingUser) {
+                if (existingUser.password == password) {
+                    res.status(200).send({
+                        status: "OK Request",
+                        message: "logged in",
+                        data: existingUser
+                    });
                 } else {
                     res.status(401).json({
                         status: "Unauthorized",
-                        message: "User with this email doesn't exist"
+                        message: "Wrong password"
                     });
                 }
+            } else {
+                res.status(401).json({
+                    status: "Unauthorized",
+                    message: "User with this email doesn't exist"
+                });
             }
+
         } else {
             res.status(401).send({
                 message: "email not correctly formatted"

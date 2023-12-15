@@ -286,10 +286,10 @@ router.delete('/users/delete-favorite-song', async (req, res) => {
                         favorite_song_id
                     })
                     .del();
-
+                console.log("D")
                 if (deletedCount > 0) {
                     res.status(200).send({
-                        status: "OK request",
+                        status: "OK Request",
                         message: "Song removed from favorites",
                     });
                 } else {

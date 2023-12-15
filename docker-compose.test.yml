@@ -1,0 +1,39 @@
+services:
+  api:
+    command: ["npm", "run", "prep"]
+    build: ./images/api
+    ports:
+      - 3001:3000
+    environment:
+      POSTGRES_HOST: db
+      NODE_ENV:
+      PORT:
+      
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test
+    volumes:
+      - ./images/api/src:/usr/app/src
+    tty: true
+    stdin_open: false
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16.0
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test
+      POSTGRES_HOST_AUTH_METHOD:
+    volumes:
+      - ./_volumes/dbTest/data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test -d test"]
+      interval: 5s
+      timeout: 5s
+      retries: 10

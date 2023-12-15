@@ -4,14 +4,18 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "start": "npm run migrate && nodemon src/index.js --legacy-watch",
-    "migrate": "npx knex migrate:latest --cwd src",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test-watch": "jest --watchAll --detectOpenHandles",
+    "prep": " npx knex migrate:latest --cwd ./src/db",
+    "dev": " npm run prep && npm run test-watch",
+    "start": " npm run prep && node src/index.js",
+    "test": "jest --detectOpenHandles --forceExit",
+    "nm": "nodemon src/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "assert-js": "^1.0.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",
@@ -27,5 +31,9 @@
   "bugs": {
     "url": "https://github.com/EHB-MCT/portfolio-starter-AachalShrestha/issues"
   },
-  "homepage": "https://github.com/EHB-MCT/portfolio-starter-AachalShrestha#readme"
+  "homepage": "https://github.com/EHB-MCT/portfolio-starter-AachalShrestha#readme",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3"
+  }
 }

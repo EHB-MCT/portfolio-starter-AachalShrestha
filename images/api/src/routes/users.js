@@ -4,13 +4,12 @@
 
 const express = require('express');
 const knex = require('knex');
-const knexfile = require('../knexfile');
+const knexfile = require('../db/knexfile.js');
 const {
     v4: uuidv4
 } = require('uuid');
 const router = express.Router();
 const PORT = 3000;
-
 const db = knex(knexfile.development);
 
 const bodyParser = require('body-parser');
@@ -18,6 +17,17 @@ router.use(bodyParser.json());
 router.use(express.json());
 router.use(bodyParser.json());
 
+
+const {
+    checkUserName,
+    checkPassword,
+    checkUserEmail
+} = require("../helpers/userEndPointChecker.js");
+
+
+const {
+    checkNumber
+} = require("../helpers/songEndpointChecker.js");
 
 /**
  * Get all users.
@@ -45,6 +55,52 @@ router.get('/users', async (req, res) => {
 });
 
 /**
+ * Get a user by ID.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
+router.get('/users/:userid', async (req, res) => {
+    const id = parseInt(req.params.userid, 10);
+    if (checkNumber(id)) {
+        try {
+            // Use async/await for database query
+            const allusers = await db('users').select('*');
+            await db('users')
+                .where({
+                    id
+                })
+                .first().then((user) => {
+                    if (user) {
+                        res.status(200).send({
+                            data: user
+                        });
+                    } else {
+                        // Handle case where user with the given ID is not found
+                        res.status(404).json({
+                            status: 'User not found'
+                        });
+                    }
+                });
+
+        } catch (error) {
+            console.error(error);
+            // Handle database query error
+            res.status(500).json({
+                status: 'Internal Server Error'
+            });
+        }
+    } else {
+        // Handle case where userId is not a valid number
+        res.status(401).send({
+            message: "User ID not correctly formatted"
+        });
+    }
+});
+
+
+/**
  * Register a new user.
  *
  * @param {import("express").Request} req - Express Request object.
@@ -60,13 +116,7 @@ router.post('/users/register', async (req, res) => {
         } = req.body;
 
         const userUUID = uuidv4();
-
-        if (!username || !email || !password) {
-            res.status(400).json({
-                status: "Bad Request",
-                message: "Some fields are missing: username, email, password"
-            });
-        } else {
+        if (checkUserName(username) && checkPassword(password) && checkUserEmail(email)) {
             const existingUser = await db("users").select().where("email", email).first();
 
             if (existingUser) {
@@ -78,15 +128,23 @@ router.post('/users/register', async (req, res) => {
                 const resp = await db("users").insert({
                     username: username,
                     email: email,
-                    password: password
+                    password: password,
+                    uuid: userUUID
                 }).returning();
 
-                res.status(200).json({
-                    status: "OK",
+                res.status(201).json({
+                    status: "OK Request",
                     message: `User has been registered!: ${username, email}`
                 });
             }
+
+        } else {
+            res.status(401).send({
+                message: "username, email or password not correctly formatted"
+            });
         }
+
+
     } catch (error) {
         console.error(error);
         res.status(500).json({
@@ -113,18 +171,13 @@ router.post('/users/login', async (req, res) => {
 
         const userUUID = uuidv4();
 
-        if (!email || !password) {
-            res.status(400).send({
-                status: "Bad request",
-                message: "Some fields are missing: email, password"
-            });
-        } else {
-            const existingUser = await db("users").select().where("email", email).first();
+        if (checkUserEmail(email) && checkPassword(password)) {
 
+            const existingUser = await db("users").select().where("email", email).first();
             if (existingUser) {
                 if (existingUser.password == password) {
                     res.status(200).send({
-                        status: "OK request",
+                        status: "OK Request",
                         message: "logged in",
                         data: existingUser
                     });
@@ -140,6 +193,11 @@ router.post('/users/login', async (req, res) => {
                     message: "User with this email doesn't exist"
                 });
             }
+
+        } else {
+            res.status(401).send({
+                message: "email not correctly formatted"
+            });
         }
     } catch (error) {
         console.error(error);
@@ -162,33 +220,41 @@ router.post('/users/add-favorite-song', async (req, res) => {
         favorite_song_id
     } = req.body;
 
+
     try {
-        const existingFavoriteSong = await db("users_songs").select().where({
-            user_id,
-            favorite_song_id
-        }).first();
-
-        if (existingFavoriteSong) {
-            res.status(409).send({
-                status: "Conflict",
-                message: "This song is already in favorites",
-            });
-        } else {
-            await db("users_songs").insert({
+        if (checkNumber(user_id) && checkNumber(favorite_song_id)) {
+            const existingFavoriteSong = await db("users_songs").select().where({
                 user_id,
-                favorite_song_id,
+                favorite_song_id
+            }).first();
+
+            if (existingFavoriteSong) {
+                res.status(409).send({
+                    status: "Conflict",
+                    message: "This song is already in favorites",
+                });
+            } else {
+                await db("users_songs").insert({
+                    user_id,
+                    favorite_song_id,
+                });
+
+                res.status(200).send({
+                    status: "OK Request",
+                    message: "Song added to favorites",
+                });
+            }
+        } else {
+            res.status(401).send({
+                message: "song id or user id not correctly formatted"
             });
 
-            res.status(200).send({
-                status: "OK request",
-                message: "Song added to favorites",
-            });
         }
     } catch (error) {
-        console.error(error);
         res.status(500).json({
             error: 'Unable to add song to favorites',
         });
+
     }
 });
 
@@ -205,42 +271,49 @@ router.delete('/users/delete-favorite-song', async (req, res) => {
         favorite_song_id
     } = req.body;
 
-    try {
-        const existingFavoriteSong = await db("users_songs").select().where({
-            user_id,
-            favorite_song_id
-        }).first();
+    if (checkNumber(user_id) && checkNumber(favorite_song_id)) {
 
-        if (existingFavoriteSong) {
-            const deletedCount = await db("users_songs")
-                .where({
-                    user_id,
-                    favorite_song_id
-                })
-                .del();
+        try {
+            const existingFavoriteSong = await db("users_songs").select().where({
+                user_id,
+                favorite_song_id
+            }).first();
 
-            if (deletedCount > 0) {
-                res.status(200).send({
-                    status: "OK request",
-                    message: "Song removed from favorites",
-                });
+            if (existingFavoriteSong) {
+                const deletedCount = await db("users_songs")
+                    .where({
+                        user_id,
+                        favorite_song_id
+                    })
+                    .del();
+                console.log("D")
+                if (deletedCount > 0) {
+                    res.status(200).send({
+                        status: "OK Request",
+                        message: "Song removed from favorites",
+                    });
+                } else {
+                    res.status(404).send({
+                        status: "Bad request",
+                        message: "Song not removed from favorites",
+                    });
+                }
             } else {
-                res.status(404).send({
+
+                res.status(409).send({
                     status: "Bad request",
-                    message: "Song not removed from favorites",
+                    message: "This song is not in favorites",
                 });
             }
-        } else {
-
-            res.status(409).send({
-                status: "Bad request",
-                message: "This song is not in favorites",
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({
+                error: 'Unable to delete song from favorites',
             });
         }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            error: 'Unable to delete song from favorites',
+    } else {
+        res.status(401).send({
+            message: "song id or user id not correctly formatted"
         });
     }
 });
@@ -254,7 +327,6 @@ router.delete('/users/delete-favorite-song', async (req, res) => {
  */
 router.get('/users/:user_id/favorite-songs', async (req, res) => {
     const user_id = req.params.user_id;
-    console.log(user_id);
     try {
         const fetch_favorite_songs = await db('users_songs')
             .select()
@@ -271,7 +343,6 @@ router.get('/users/:user_id/favorite-songs', async (req, res) => {
             })
         );
 
-        console.log(favorite_songs);
 
         res.status(200).send({
             status: "OK request",

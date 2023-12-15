@@ -63,19 +63,15 @@ router.get('/users', async (req, res) => {
  */
 router.get('/users/:userid', async (req, res) => {
     const id = parseInt(req.params.userid, 10);
-    console.log('Received user ID:', id);
-
     if (checkNumber(id)) {
         try {
             // Use async/await for database query
             const allusers = await db('users').select('*');
-            console.log("USER ROUTE all users:", allusers)
             await db('users')
                 .where({
                     id
                 })
                 .first().then((user) => {
-                    console.log("user", user);
                     if (user) {
                         res.status(200).send({
                             data: user
@@ -120,7 +116,6 @@ router.post('/users/register', async (req, res) => {
         } = req.body;
 
         const userUUID = uuidv4();
-        console.log("USER:", username, email, password)
         if (checkUserName(username) && checkPassword(password) && checkUserEmail(email)) {
             const existingUser = await db("users").select().where("email", email).first();
 
@@ -179,7 +174,6 @@ router.post('/users/login', async (req, res) => {
         if (checkUserEmail(email) && checkPassword(password)) {
 
             const existingUser = await db("users").select().where("email", email).first();
-            console.log(existingUser);
             if (existingUser) {
                 if (existingUser.password == password) {
                     res.status(200).send({
@@ -246,7 +240,7 @@ router.post('/users/add-favorite-song', async (req, res) => {
                 });
 
                 res.status(200).send({
-                    status: "OK request",
+                    status: "OK Request",
                     message: "Song added to favorites",
                 });
             }
@@ -257,7 +251,6 @@ router.post('/users/add-favorite-song', async (req, res) => {
 
         }
     } catch (error) {
-        console.error(error);
         res.status(500).json({
             error: 'Unable to add song to favorites',
         });
@@ -278,42 +271,49 @@ router.delete('/users/delete-favorite-song', async (req, res) => {
         favorite_song_id
     } = req.body;
 
-    try {
-        const existingFavoriteSong = await db("users_songs").select().where({
-            user_id,
-            favorite_song_id
-        }).first();
+    if (checkNumber(user_id) && checkNumber(favorite_song_id)) {
 
-        if (existingFavoriteSong) {
-            const deletedCount = await db("users_songs")
-                .where({
-                    user_id,
-                    favorite_song_id
-                })
-                .del();
+        try {
+            const existingFavoriteSong = await db("users_songs").select().where({
+                user_id,
+                favorite_song_id
+            }).first();
 
-            if (deletedCount > 0) {
-                res.status(200).send({
-                    status: "OK request",
-                    message: "Song removed from favorites",
-                });
+            if (existingFavoriteSong) {
+                const deletedCount = await db("users_songs")
+                    .where({
+                        user_id,
+                        favorite_song_id
+                    })
+                    .del();
+
+                if (deletedCount > 0) {
+                    res.status(200).send({
+                        status: "OK request",
+                        message: "Song removed from favorites",
+                    });
+                } else {
+                    res.status(404).send({
+                        status: "Bad request",
+                        message: "Song not removed from favorites",
+                    });
+                }
             } else {
-                res.status(404).send({
+
+                res.status(409).send({
                     status: "Bad request",
-                    message: "Song not removed from favorites",
+                    message: "This song is not in favorites",
                 });
             }
-        } else {
-
-            res.status(409).send({
-                status: "Bad request",
-                message: "This song is not in favorites",
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({
+                error: 'Unable to delete song from favorites',
             });
         }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            error: 'Unable to delete song from favorites',
+    } else {
+        res.status(401).send({
+            message: "song id or user id not correctly formatted"
         });
     }
 });
@@ -327,7 +327,6 @@ router.delete('/users/delete-favorite-song', async (req, res) => {
  */
 router.get('/users/:user_id/favorite-songs', async (req, res) => {
     const user_id = req.params.user_id;
-    console.log(user_id);
     try {
         const fetch_favorite_songs = await db('users_songs')
             .select()
@@ -344,7 +343,6 @@ router.get('/users/:user_id/favorite-songs', async (req, res) => {
             })
         );
 
-        console.log(favorite_songs);
 
         res.status(200).send({
             status: "OK request",

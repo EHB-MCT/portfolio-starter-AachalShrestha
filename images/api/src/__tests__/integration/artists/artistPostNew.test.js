@@ -15,7 +15,6 @@ describe('POST /artists', () => {
 
     beforeAll(async () => {
         await db.raw('BEGIN');
-        await db('artists').insert(existingArtist);
     });
 
     afterAll(async () => {

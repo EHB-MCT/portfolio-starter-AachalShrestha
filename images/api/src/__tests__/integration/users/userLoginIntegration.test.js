@@ -37,7 +37,6 @@ describe('POST /user/login', () => {
             .post('/users/login')
             .send(existingUser);
 
-        console.log("register USER: response", response.body);
         expect(response.status).toBe(200);
         const responseBody = response.body;
         expect(responseBody.status).toBe('OK Request');

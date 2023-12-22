@@ -5,4 +5,7 @@
 
 .Nav :last-child{
     display: flex;
+    margin-left: 20px;
 }
+
+

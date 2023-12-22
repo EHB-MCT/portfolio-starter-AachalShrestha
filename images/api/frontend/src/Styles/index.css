@@ -2,14 +2,27 @@
 
 body {
   margin: 0;
-  background: radial-gradient(at center, #EF95BA, #E7E7DE);
+/*
+* Created with https://www.css-gradient.com
+* Gradient link: https://www.css-gradient.com/?c1=dc5a77&c2=f3d2e8&gt=r&gd=dcc
+*/
+background: radial-gradient(at center, #DC5A77, #F3D2E8);
   font-family: 'Work Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+.App{
+  margin-left: 5%;
+  margin-right: 5%;
+}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+a{
+  text-decoration: none;
+  color: black;
 }

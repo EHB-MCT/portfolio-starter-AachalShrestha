@@ -1,4 +1,4 @@
-import '../Styles/Nav.css';
+import '../Styles/nav.css';
 
 
 const Navigation = () => {
@@ -9,8 +9,8 @@ const Navigation = () => {
           <p>Welcome</p>
         </div>
         <div>
-          <p>Home</p>
-          <p>Profile</p>
+          <a href='/'><p>Home</p></a>
+          <a href='/Profile'><p>Profile</p></a>
         </div>
       </div>
     </div>

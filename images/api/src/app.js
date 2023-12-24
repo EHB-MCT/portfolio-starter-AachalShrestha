@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors')
 const knex = require('knex');
 const knexfile = require('./db/knexfile.js');
 const {
@@ -17,6 +18,7 @@ const artistsRoutes = require('./routes/artist.js');
 const songsRoutes = require('./routes/songs.js');
 const userRoutes = require('./routes/users.js');
 
+app.use(cors());
 app.use('/', artistsRoutes);
 app.use('/', songsRoutes);
 app.use('/', userRoutes);

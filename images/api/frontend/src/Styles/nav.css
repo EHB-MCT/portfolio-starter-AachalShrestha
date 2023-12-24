@@ -3,7 +3,7 @@
     justify-content:space-between;
 }
 
-.Nav :last-child{
+.Nav :nth-child(2){
     display: flex;
     margin-left: 20px;
 }

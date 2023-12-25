@@ -37,3 +37,7 @@ input::placeholder {
 .form-wrapper a{
     color: #c90086;
 }
+
+.form-wrapper p{
+    margin-top: 30px;
+}

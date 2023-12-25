@@ -1,4 +1,5 @@
 import React from 'react';
+import '../Styles/loginRegister.css';
 import Navigation from '../Components/Nav';
 import LoginForm from '../Components/LoginForm';
 

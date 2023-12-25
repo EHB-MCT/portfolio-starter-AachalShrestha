@@ -171,7 +171,7 @@ router.post('/users/login', async (req, res) => {
 
         const userUUID = uuidv4();
 
-        if (checkUserEmail(email) && checkPassword(password)) {
+        if (checkUserEmail(email)) {
 
             const existingUser = await db("users").select().where("email", email).first();
             if (existingUser) {

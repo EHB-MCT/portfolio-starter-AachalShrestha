@@ -1,0 +1,39 @@
+.form-wrapper{
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+input {
+    text-decoration: none;
+    background: none;
+    color: black;
+    border: none;
+    border-bottom: 1px solid black;
+    outline: none;
+    font-family: 'Work Sans', sans-serif;
+    padding-bottom: 8px;
+    margin-bottom: 50px;
+}
+  
+  /* Optional: Style the input on focus */
+input:focus {
+    border-bottom: 1px solid black; /* You can change the color and thickness as desired */
+}
+
+input::placeholder {
+    color: black;
+}
+  
+.form-wrapper a{
+    color: #c90086;
+}

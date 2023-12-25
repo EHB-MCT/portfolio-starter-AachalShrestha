@@ -12,7 +12,6 @@ const Table = ({ url }) => {
         const response = await axios.get(`${url}`);
         const songs = response.data.data;
 
-        // Create an array to store promises for fetching artist names
         const artistPromises = songs.map(async (song) => {
           if(song.artist_id){
             const artistResponse = await axios.get(`http://localhost:3000/artists/${song.artist_id}`);
@@ -29,7 +28,6 @@ const Table = ({ url }) => {
           }
         });
 
-        // Wait for all promises to resolve
         const songsWithArtistNames = await Promise.all(artistPromises);
 
         setTableData(songsWithArtistNames);

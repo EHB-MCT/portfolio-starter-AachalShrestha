@@ -2,16 +2,21 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TableRow from './TableRow';
 
-const Table = ({ url }) => {
+const Table = ({ url, favorites }) => {
   const [tableData, setTableData] = useState([]);
+  const [favSongs, setFavSongs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const storedUserData = sessionStorage.getItem('user');
+  const user = storedUserData ? JSON.parse(storedUserData) : null;
 
   useEffect(() => {
     const fetchData = async () => {
+      const response = await axios.get(`${url}`);
+      const songs = response.data.data;
       try {
-        const response = await axios.get(`${url}`);
-        const songs = response.data.data;
-
+        //THZE ERROR
+        const resp  = await axios.get(`http://localhost:3000/users/${user.id}/favorite-songs`);
+        setFavSongs(resp.data.data);
         const artistPromises = songs.map(async (song) => {
           if(song.artist_id){
             const artistResponse = await axios.get(`http://localhost:3000/artists/${song.artist_id}`);
@@ -26,10 +31,10 @@ const Table = ({ url }) => {
               artistName: null,
             };
           }
+
         });
 
         const songsWithArtistNames = await Promise.all(artistPromises);
-
         setTableData(songsWithArtistNames);
         setLoading(false);
       } catch (error) {
@@ -40,6 +45,10 @@ const Table = ({ url }) => {
 
     fetchData();
   }, [url]);
+
+  useEffect(() => {
+    console.log("Updated favSongs:", favSongs);
+  }, [favSongs]);
 
   return (
     <div className='table-container'>
@@ -53,8 +62,8 @@ const Table = ({ url }) => {
         </thead>
         <tbody>
           {Array.isArray(tableData) && tableData.length > 0 ? (
-            tableData.map((item, index) => (
-              <TableRow key={index} data={item} />
+            tableData.map((item) => (
+              <TableRow song={item} isFavorite={favSongs.some(favSong => favSong.name === item.name)} />
             ))
           ) : (
             <tr>

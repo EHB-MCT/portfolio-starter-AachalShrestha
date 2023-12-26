@@ -18,3 +18,7 @@ tbody td {
     padding-top: 12px;
     padding-bottom: 12px;
 }
+
+.heartButton:hover{
+    cursor: pointer;
+}

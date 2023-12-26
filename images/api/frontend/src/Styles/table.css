@@ -22,3 +22,11 @@ tbody td {
 .heartButton:hover{
     cursor: pointer;
 }
+
+.add-song-form-container{
+    display: flex;
+}
+
+table{
+    margin-bottom: 50px;
+}

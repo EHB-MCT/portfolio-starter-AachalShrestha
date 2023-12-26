@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import TableRow from './TableRow';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import TableRow from "./TableRow";
 
 const Table = ({ url, favorites }) => {
   const [tableData, setTableData] = useState([]);
   const [favSongs, setFavSongs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const storedUserData = sessionStorage.getItem('user');
+  const storedUserData = sessionStorage.getItem("user");
   const user = storedUserData ? JSON.parse(storedUserData) : null;
 
   useEffect(() => {
@@ -15,30 +15,34 @@ const Table = ({ url, favorites }) => {
       const songs = response.data.data;
       try {
         //THZE ERROR
-        const resp  = await axios.get(`http://localhost:3000/users/${user.id}/favorite-songs`);
-        setFavSongs(resp.data.data);
+        if (user) {
+          const resp = await axios.get(
+            `http://localhost:3000/users/${user.id}/favorite-songs`
+          );
+          setFavSongs(resp.data.data);
+        }
         const artistPromises = songs.map(async (song) => {
-          if(song.artist_id){
-            const artistResponse = await axios.get(`http://localhost:3000/artists/${song.artist_id}`);
-            console.log(artistResponse)
+          if (song.artist_id) {
+            const artistResponse = await axios.get(
+              `http://localhost:3000/artists/${song.artist_id}`
+            );
             return {
               ...song,
               artistName: artistResponse.data.data[0].name,
             };
-          }else{
+          } else {
             return {
               ...song,
               artistName: null,
             };
           }
-
         });
 
         const songsWithArtistNames = await Promise.all(artistPromises);
         setTableData(songsWithArtistNames);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
         setLoading(false);
       }
     };
@@ -46,12 +50,8 @@ const Table = ({ url, favorites }) => {
     fetchData();
   }, [url]);
 
-  useEffect(() => {
-    console.log("Updated favSongs:", favSongs);
-  }, [favSongs]);
-
   return (
-    <div className='table-container'>
+    <div className="table-container">
       <table className="table">
         <thead>
           <tr>
@@ -63,7 +63,12 @@ const Table = ({ url, favorites }) => {
         <tbody>
           {Array.isArray(tableData) && tableData.length > 0 ? (
             tableData.map((item) => (
-              <TableRow song={item} isFavorite={favSongs.some(favSong => favSong.name === item.name)} />
+              <TableRow
+                song={item}
+                isFavorite={favSongs.some(
+                  (favSong) => favSong.name === item.name
+                )}
+              />
             ))
           ) : (
             <tr>

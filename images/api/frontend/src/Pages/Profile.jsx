@@ -2,7 +2,6 @@ import React from "react";
 import Navigation from "../Components/Nav";
 import Table from "../Components/Table";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 
 const Profile = () => {
   const navigator = useNavigate();
@@ -21,7 +20,7 @@ const Profile = () => {
         music
       </h1>
       <Table
-        url={`http://localhost:3000/users/${user.id}/favorite-songs`}
+        url={`http://localhost:3001/users/${user.id}/favorite-songs`}
         favorites={true}
       />
       <button onClick={logOut}>Log out</button>

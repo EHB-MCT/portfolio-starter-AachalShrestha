@@ -17,14 +17,14 @@ const Table = ({ url, favorites }) => {
         //THZE ERROR
         if (user) {
           const resp = await axios.get(
-            `http://localhost:3000/users/${user.id}/favorite-songs`
+            `http://localhost:3001/users/${user.id}/favorite-songs`
           );
           setFavSongs(resp.data.data);
         }
         const artistPromises = songs.map(async (song) => {
           if (song.artist_id) {
             const artistResponse = await axios.get(
-              `http://localhost:3000/artists/${song.artist_id}`
+              `http://localhost:3001/artists/${song.artist_id}`
             );
             return {
               ...song,

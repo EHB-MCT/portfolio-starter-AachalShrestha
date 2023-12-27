@@ -1,16 +1,11 @@
 const express = require('express');
 const cors = require('cors')
-const knex = require('knex');
-const knexfile = require('./db/knexfile.js');
+
 const {
     v4: uuidv4
 } = require('uuid');
 const app = express();
-const PORT = 3000;
 
-const db = knex(knexfile.development);
-
-// Remove the following line
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 

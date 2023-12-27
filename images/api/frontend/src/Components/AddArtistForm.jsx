@@ -9,7 +9,7 @@ const AddSongForm = () => {
 
   const handleAddArtist = async () => {
     try {
-      const response = await fetch("http://localhost:3000/artists", {
+      const response = await fetch("http://localhost:3001/artists", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

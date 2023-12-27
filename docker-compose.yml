@@ -5,7 +5,7 @@ services:
     build: ./images/api
     image: crshlab/api:latest
     ports:
-      - 3000:3000
+      - 3001:3001
     environment:
       NODE_ENV:
       POSTGRES_USER:

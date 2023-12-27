@@ -20,14 +20,14 @@ const TableRow = ({ song, isFavorite }) => {
         if (favorite) {
           console.log(user.id);
           await axios.delete(
-            "http://localhost:3000/users/delete-favorite-song",
+            "http://localhost:3001/users/delete-favorite-song",
             {
               data: { user_id: user.id, favorite_song_id: favoriteSongId },
             }
           );
           console.log("deleted song fromt favs");
         } else {
-          await axios.post("http://localhost:3000/users/add-favorite-song", {
+          await axios.post("http://localhost:3001/users/add-favorite-song", {
             user_id: user.id,
             favorite_song_id: favoriteSongId,
           });

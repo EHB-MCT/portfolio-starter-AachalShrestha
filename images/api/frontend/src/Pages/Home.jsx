@@ -21,7 +21,7 @@ const App = () => {
         <AddArtistForm />
         <AddSongForm />
       </div>
-      <Table url="http://localhost:3000/songs" favorites={false} />
+      <Table url="http://localhost:3001/songs" favorites={false} />
     </div>
   );
 };

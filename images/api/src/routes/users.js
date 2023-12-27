@@ -125,13 +125,13 @@ router.post('/users/register', async (req, res) => {
                     message: "User with this email already exists"
                 });
             } else {
-                const id = await db("users").insert({
+                const userId = await db("users").insert({
                     username: username,
                     email: email,
                     password: password,
                     uuid: userUUID
                 }).returning('id');
-
+                const id = userId[0].id;
                 res.status(201).json({
                     status: "OK Request",
                     message: `User has been registered!`,

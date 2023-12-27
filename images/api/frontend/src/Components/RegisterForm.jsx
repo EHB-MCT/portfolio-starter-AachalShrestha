@@ -1,39 +1,46 @@
-import '../Styles/loginRegister.css';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import "../Styles/loginRegister.css";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const RegisterForm = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:3000/users/register', {
-        username,
-        email,
-        password,
+      const response = await fetch("http://localhost:3000/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: username,
+          email: email,
+          password: password,
+        }),
       });
 
-      console.log('response', response);
+      const data = await response.json();
 
       if (response.status === 201) {
-        console.log('Registered in successfully:', response.data);
-        navigate('/'); 
-        sessionStorage.setItem('user', JSON.stringify(response.data.data));
+        navigate("/");
+        sessionStorage.setItem("user", JSON.stringify(data.data));
       } else {
-        console.log('Register failed:', response.data);
+        setMessage(data.message);
       }
     } catch (error) {
-      console.error('Error during register:', error);
+      console.error("Error during register:", error);
     }
   };
 
   return (
     <div className="form-container">
-        <input
+      {message && <p className="message">{message} </p>}
+      <input
         type="text"
         placeholder="username"
         value={username}

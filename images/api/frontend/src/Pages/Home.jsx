@@ -3,6 +3,7 @@ import { BrowserRouter as Route, Router, Routes } from "react-router-dom";
 
 import Navigation from "../Components/Nav";
 import AddSongForm from "../Components/AddSongForm";
+import AddArtistForm from "../Components/AddArtistForm";
 import Table from "../Components/Table";
 
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
         <br />
         new music
       </h1>
+      <AddArtistForm />
       <AddSongForm />
       <Table url="http://localhost:3000/songs" favorites={false} />
     </div>

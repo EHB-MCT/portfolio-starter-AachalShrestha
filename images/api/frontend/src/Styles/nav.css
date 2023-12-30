@@ -1,0 +1,11 @@
+.Nav{
+    display: flex;
+    justify-content:space-between;
+}
+
+.Nav :nth-child(2){
+    display: flex;
+    margin-left: 20px;
+}
+
+

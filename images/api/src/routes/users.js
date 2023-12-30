@@ -125,16 +125,17 @@ router.post('/users/register', async (req, res) => {
                     message: "User with this email already exists"
                 });
             } else {
-                const resp = await db("users").insert({
+                const userId = await db("users").insert({
                     username: username,
                     email: email,
                     password: password,
                     uuid: userUUID
-                }).returning();
-
+                }).returning('id');
+                const id = userId[0].id;
                 res.status(201).json({
                     status: "OK Request",
-                    message: `User has been registered!: ${username, email}`
+                    message: `User has been registered!`,
+                    data:{username, email, userUUID, id}
                 });
             }
 
@@ -171,7 +172,7 @@ router.post('/users/login', async (req, res) => {
 
         const userUUID = uuidv4();
 
-        if (checkUserEmail(email) && checkPassword(password)) {
+        if (checkUserEmail(email)) {
 
             const existingUser = await db("users").select().where("email", email).first();
             if (existingUser) {

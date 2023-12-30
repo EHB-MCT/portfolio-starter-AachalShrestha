@@ -1,0 +1,22 @@
+.add-song-form-wrapper{
+    margin-bottom: 50px;
+}
+.add-song-form-container{
+    display: flex;
+    justify-content: space-between;
+    width: 40%;
+    margin-bottom: 20px;
+}
+
+
+.add-song-form-container input {
+    text-decoration: none;
+    background: none;
+    color: black;
+    border: none;
+    border-bottom: 1px solid black;
+    outline: none;
+    font-family: 'Work Sans', sans-serif;
+    padding-bottom: 8px;
+    margin-right: 20px;
+}

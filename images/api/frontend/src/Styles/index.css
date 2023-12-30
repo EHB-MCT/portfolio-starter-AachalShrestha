@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap');
+
+body {
+  margin: 0;
+/*
+* Created with https://www.css-gradient.com
+* Gradient link: https://www.css-gradient.com/?c1=dc5a77&c2=f3d2e8&gt=r&gd=dcc
+*/
+background: radial-gradient(at center, #DC5A77, #F3D2E8);
+  font-family: 'Work Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.App{
+  margin-left: 6%;
+  margin-right: 6%;
+  height: 100vh;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+a{
+  text-decoration: none;
+  color: black;
+}
+
+button {
+  font-family: 'Work Sans', sans-serif;
+  background-color: transparent; 
+  padding: 8px;
+  border: 1px solid black; 
+  outline: none;
+}
+
+button:hover{
+  color: white;
+  background-color:black;
+}
+
+.message{
+  color:#912139;
+}

@@ -10,7 +10,7 @@ const AddSongForm = () => {
 
   const handleAddSong = async () => {
     try {
-      const response = await fetch("http://localhost:3000/songs", {
+      const response = await fetch("http://localhost:3001/songs", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

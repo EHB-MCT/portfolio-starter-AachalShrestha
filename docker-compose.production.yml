@@ -1,6 +1,6 @@
 services:
   api:
-    image: crshlab/api:latest
+    image: thealiciachickenwings/aachaldev:latest
     ports:
       - 8080:3000
     environment: 

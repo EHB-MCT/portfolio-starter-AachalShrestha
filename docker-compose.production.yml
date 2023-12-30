@@ -1,9 +1,10 @@
 services:
   api:
-    image: thealiciachickenwings/aachaldev:latest
+    image: thealiciachickenwings/portfolio-starter-aachalshrestha-api:latest
     ports:
       - 8080:3000
     environment: 
+      NODE_ENV:
       POSTGRES_PASSWORD: 
       POSTGRES_USER: 
       POSTGRES_DB: 

@@ -65,7 +65,6 @@ router.get('/users/:userid', async (req, res) => {
     const id = parseInt(req.params.userid, 10);
     if (checkNumber(id)) {
         try {
-            // Use async/await for database query
             const allusers = await db('users').select('*');
             await db('users')
                 .where({
@@ -77,7 +76,6 @@ router.get('/users/:userid', async (req, res) => {
                             data: user
                         });
                     } else {
-                        // Handle case where user with the given ID is not found
                         res.status(404).json({
                             status: 'User not found'
                         });
@@ -86,13 +84,11 @@ router.get('/users/:userid', async (req, res) => {
 
         } catch (error) {
             console.error(error);
-            // Handle database query error
             res.status(500).json({
                 status: 'Internal Server Error'
             });
         }
     } else {
-        // Handle case where userId is not a valid number
         res.status(401).send({
             message: "User ID not correctly formatted"
         });
@@ -150,7 +146,7 @@ router.post('/users/register', async (req, res) => {
         console.error(error);
         res.status(500).json({
             status: 'Internal Server Error',
-            error: error.message, // Include additional error details if needed
+            error: error.message, 
         });
     }
 });
@@ -287,7 +283,6 @@ router.delete('/users/delete-favorite-song', async (req, res) => {
                         favorite_song_id
                     })
                     .del();
-                console.log("D")
                 if (deletedCount > 0) {
                     res.status(200).send({
                         status: "OK Request",

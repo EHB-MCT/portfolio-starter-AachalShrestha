@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('../../../app'); // Update the path as needed
+const app = require('../../../app'); 
 const knexfile = require('../../../db/knexfile');
 const db = require('knex')(knexfile.development);
 
@@ -16,7 +16,6 @@ describe('POST /songs', () => {
 
     beforeAll(async () => {
         try {
-            // Insert the artist
             const [insertedArtistName] = await db('artists').insert(testArtist).returning('name');
             testSong.artist = insertedArtistName.name;
             console.log("testSONG", testSong)
@@ -27,7 +26,6 @@ describe('POST /songs', () => {
 
     afterAll(async () => {
         try {
-            // Delete the song and artist
             await db('songs').where({
                 name: 'testSong'
             }).delete();

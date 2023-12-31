@@ -35,7 +35,6 @@ router.get('/artists', (req, res) => {
             });
         })
         .catch((error) => {
-            console.error(error);
             res.status(500).json({
                 error: 'Unable to fetch artists'
             });
@@ -55,7 +54,6 @@ router.post('/artists', async (req, res) => {
     } = req.body;
     const artistUUID = uuidv4();
     const existingArtist = await db("artists").select().where("name", name).first();
-    console.log("existingartist", existingArtist)
     if (checkArtistName(name)) {
         if (existingArtist) {
             res.status(409).send({
@@ -84,12 +82,19 @@ router.post('/artists', async (req, res) => {
     }
 });
 
+
+/**
+ * Get an artist by Id.
+ *
+ * @param {import("express").Request} req - Express Request object.
+ * @param {import("express").Response} res - Express Response object.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
 router.get('/artists/:artist_id', async (req, res) => {
     const id = parseInt(req.params.artist_id, 10);
     if (checkNumber(id)) {
         try {
             const existingArtist = await db('artists').select().where("id", id);
-            console.log("existingartist:", existingArtist);
             if (existingArtist.length > 0) {
                     res.status(200).send({
                         status: "OK request",

@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('../../../app'); // Update the path as needed
+const app = require('../../../app'); 
 const knexfile = require('../../../db/knexfile');
 const db = require('knex')(knexfile.development);
 
@@ -15,7 +15,6 @@ const SONG = {
 describe('Song Integration Tests', () => {
     beforeAll(async () => {
         try {
-            // Insert the artist
             const [insertedArtistId] = await db('artists').insert(ARTIST).returning('id');
             artistId = insertedArtistId.id;
 
@@ -30,7 +29,6 @@ describe('Song Integration Tests', () => {
 
     afterAll(async () => {
         try {
-            // Delete the song and artist
             await db('songs').where({
                 name: 'testsong2'
             }).delete();

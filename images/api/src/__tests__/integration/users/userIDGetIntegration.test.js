@@ -13,12 +13,10 @@ describe('GET /users/:userid', () => {
     let userId;
 
     beforeAll(async () => {
-        // No need to start a transaction here, Supertest runs each test in a transaction
         [userId] = await db('users').insert(user).returning('id');
     });
 
     afterAll(async () => {
-        // No need to roll back the transaction here
         await db('users').where({
             email: 'alicia@gmail.com'
         }).delete();

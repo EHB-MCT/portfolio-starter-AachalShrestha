@@ -14,10 +14,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Docker Compose for Testing
-        run: docker-compose -f docker-compose.test.yml build
-        
-      - name: Run Database Migrations
-        run: docker-compose -f docker-compose.test.yml run api npm run prep
+        run: |
+          docker-compose -f docker-compose.test.yml build
+          docker-compose -f docker-compose.test.yml run api npm run prep
 
       - name: Run Tests
         run: docker-compose -f docker-compose.test.yml run api npm run test

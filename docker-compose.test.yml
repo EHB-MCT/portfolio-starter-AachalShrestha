@@ -3,7 +3,7 @@ services:
     command: ["npm", "run", "prep"]
     build: ./images/api
     ports:
-      - 3001:3000
+      - 3001:3001
     environment:
       POSTGRES_HOST: db
       NODE_ENV:

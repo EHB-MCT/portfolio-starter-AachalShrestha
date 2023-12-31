@@ -31,4 +31,4 @@ jobs:
       - name: Push to Docker Hub
         run: |
           docker-compose -f docker-compose.production.yml push
-          docker push meymey200/portfolio:latest
+          docker push thealiciachickenwings/portfolio-starter-aachalshrestha-api:latest

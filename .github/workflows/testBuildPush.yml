@@ -14,10 +14,12 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Docker Compose for Testing
-        run: docker-compose -f docker-compose.test.yml build
+        run: |
+          docker-compose -f docker-compose.test.yml build
+          docker-compose -f docker-compose.test.yml run api npm run prep
 
       - name: Run Tests
-        run: docker-compose -f docker-compose.test.yml run api npm run prep && npm run test
+        run: docker-compose -f docker-compose.test.yml run api npm run test
 
       - name: Set up Docker Compose for Production
         run: docker-compose -f docker-compose.production.yml build

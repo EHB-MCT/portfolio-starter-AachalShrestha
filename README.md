@@ -4,6 +4,11 @@
 
 The API is written in Nodejs and is designed to allow users to add songs to their favorites. Additionally, users can contribute by adding songs and artists that are not in the database yet, with the goal of raising recognition for underrated artists.
 
+## Frontend
+
+The frontend of the application is built with React and is located in the `images/api/frontend` directory. If you want to run the frontend separately, follow the instructions in the [frontend README](images/api/frontend/README.md).
+**Note: This is my first time working with React.**
+
 ## Getting Started
 
 To run the project, follow these steps:

@@ -27,6 +27,7 @@ To run the project, follow these steps:
 | POST | /songs | Add a new song | `name` (string), `artist` (string) |
 | GET | /songs/:artist_id | Get all songs from an artist | `artist_id` (number) |
 | GET | /users | Get all users | N/A |
+| GET | /users/:userid | Get a user by ID | `userid` (number) |
 | POST | /users/register | Create a new user | `username` (string), `email` (string), `password`(string) |
 | POST | /users/login | Login a user | `email` (string), `password` (string) |
 | POST | /users/add-favorite-song | Add a song to a user's favorites | `favorite_song_id` (number) |

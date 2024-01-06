@@ -23,6 +23,7 @@ To run the project, follow these steps:
 | --- | --- | --- | --- |
 | GET | /artists | Get all artists | N/A |
 | POST | /artists | Create a new artist | `name` (string) |
+| GET | /artists/:artist_id | Get an artist by ID | `artist_id` (number) |
 | GET | /songs | Get all songs | N/A |
 | POST | /songs | Add a new song | `name` (string), `artist` (string) |
 | GET | /songs/:artist_id | Get all songs from an artist | `artist_id` (number) |

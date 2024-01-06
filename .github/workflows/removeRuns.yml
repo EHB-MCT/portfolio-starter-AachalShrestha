@@ -1,0 +1,16 @@
+name: Remove Runs
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  remove_runs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Remove Docker Containers
+        run: docker ps -a -q | xargs docker rm -f || true
+
+      - name: Remove Docker Images
+        run: docker images -q | xargs docker rmi -f || true
